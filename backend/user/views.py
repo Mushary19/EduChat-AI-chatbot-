@@ -15,7 +15,7 @@ def login(request):
 
     if serializer.errors:
         error = serializer.errors.get("error", "Something went wrong.")
-    return Response({"error": error}, status=400)
+    return Response({"error": error[0]}, status=400)
 
 
 @api_view(["POST"])
