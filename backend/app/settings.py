@@ -37,10 +37,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # cors
+    # 3rd party
     "corsheaders",
+    "rest_framework",
     # internal
+    "core",
     "chatbot",
+    "user",
 ]
 
 MIDDLEWARE = [
@@ -53,6 +56,8 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+REST_FRAMEWORK = {}
 
 CORS_ALLOW_ALL_ORIGINS = True
 
@@ -86,6 +91,8 @@ DATABASES = {
     }
 }
 
+
+AUTH_USER_MODEL = "user.User"
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
