@@ -3,9 +3,14 @@ import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutli
 import Popover from "@mui/material/Popover"
 import { MoreHorizontal } from "lucide-react"
 import * as React from "react"
+import { useCreateChatSession } from "../services/chatbot/mutations"
+import { useLoadChatSessions } from "../services/chatbot/queries"
 
 const Sidebar = () => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
+  const [selectedSessionId, setSelectedSessionId] = React.useState<
+    number | null
+  >(null)
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
@@ -18,57 +23,88 @@ const Sidebar = () => {
   const open = Boolean(anchorEl)
   const id = open ? "creative-popover" : undefined
 
+  const { data: chatSessions, isPending } = useLoadChatSessions()
+  const { mutate: createSession, isPending: isCreatePending } =
+    useCreateChatSession()
+
   return (
     <section className="w-full h-full bg-gray-100 p-4">
       <div className="flex flex-col gap-1 text-gray-800">
-        <div className="flex px-4 py-2 gap-3 rounded-2xl justify-between items-center group bg-gray-300 transition duration-200">
-          <span>New chat</span>
+        <div className="relative group mb-2">
           <button
-            onClick={handleClick}
-            className="opacity-0 group-hover:opacity-100 transition duration-200"
+            className="w-full flex items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white font-semibold rounded-2xl shadow-md hover:scale-[1.02] hover:shadow-lg transition-transform duration-200 ease-in-out"
+            // onClick={() => createSession()}
           >
-            <MoreHorizontal />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
+            New Chat
           </button>
+        </div>
 
-          <Popover
-            id={id}
-            open={open}
-            anchorEl={anchorEl}
-            onClose={handleClose}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "left",
-            }}
-            PaperProps={{
-              sx: {
-                borderRadius: 2,
-                boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
-                minWidth: 160,
-              },
-            }}
-          >
-            <div className="bg-white rounded-xl p-2">
-              <ul className="text-sm text-gray-700">
-                <li className="flex justify-between items-center px-4 py-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
-                  Rename
-                  <DriveFileRenameOutlineIcon fontSize="small" />
-                </li>
-                <li className="flex justify-between items-center px-4 py-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
-                  Delete
-                  <DeleteOutlineOutlinedIcon fontSize="small" />
-                </li>
-              </ul>
+        {chatSessions?.map((session) => {
+          const isSelected = selectedSessionId === session?.id
+
+          return (
+            <div
+              key={session.id}
+              onClick={() => setSelectedSessionId(session.id)}
+              className={`flex px-4 py-2 gap-3 rounded-2xl justify-between items-center group cursor-pointer transition duration-200 ${
+                isSelected ? "bg-gray-300" : "hover:bg-gray-200"
+              }`}
+            >
+              <span>{session.title}</span>
+              <button
+                onClick={handleClick}
+                className="opacity-0 group-hover:opacity-100 transition duration-200"
+              >
+                <MoreHorizontal />
+              </button>
+
+              <Popover
+                id={id}
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "left",
+                }}
+                PaperProps={{
+                  sx: {
+                    borderRadius: 2,
+                    boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
+                    minWidth: 160,
+                  },
+                }}
+              >
+                <div className="bg-white rounded-xl p-2">
+                  <ul className="text-sm text-gray-700">
+                    <li className="flex justify-between items-center px-4 py-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
+                      Rename
+                      <DriveFileRenameOutlineIcon fontSize="small" />
+                    </li>
+                    <li className="flex justify-between items-center px-4 py-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
+                      Delete
+                      <DeleteOutlineOutlinedIcon fontSize="small" />
+                    </li>
+                  </ul>
+                </div>
+              </Popover>
             </div>
-          </Popover>
-        </div>
-
-        {/* Additional Chat Items */}
-        <div className="flex px-4 py-2 gap-3 rounded-2xl hover:bg-gray-200 transition duration-200">
-          <span>New chat</span>
-        </div>
-        <div className="flex px-4 py-2 gap-3 rounded-2xl hover:bg-gray-200 transition duration-200">
-          <span>New chat</span>
-        </div>
+          )
+        })}
       </div>
     </section>
   )

@@ -1,3 +1,7 @@
+import type {
+  IChatSession,
+  IChatSessionBody,
+} from "../../lib/types/chatbot/chatSession"
 import { fetchGet, fetchPatch, fetchPost } from "../api/apiRequests"
 
 // chat logs
@@ -10,8 +14,16 @@ export const sendChatMessage = (url: string, body: string) => {
 }
 
 // session
-export const createChatSession = (url: string, body: {}) => {
-  return fetchPost<string, {}>(url, body)
+export const loadChatSessions = (url: string) => {
+  return fetchGet<IChatSession[]>(url)
+}
+
+export const loadChatSessionById = (url: string) => {
+  return fetchGet<IChatSession>(url)
+}
+
+export const createChatSession = (url: string, body: IChatSessionBody) => {
+  return fetchPost<string, IChatSessionBody>(url, body)
 }
 
 export const updateChatSession = (url: string, body: any) => {

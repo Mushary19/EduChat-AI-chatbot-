@@ -18,7 +18,12 @@ const InputBar = () => {
     listening,
     resetTranscript,
     browserSupportsSpeechRecognition,
+    isMicrophoneAvailable,
   } = useSpeechRecognition()
+
+  if (!isMicrophoneAvailable) {
+    return <span>Please enable your microphone to use speech service.</span>
+  }
 
   if (!browserSupportsSpeechRecognition) {
     return <span>Your browser does not support speech recognition.</span>
@@ -35,7 +40,10 @@ const InputBar = () => {
     <>
       <div className="w-full px-4 py-6 bg-white">
         <div className="max-w-3xl mx-auto">
-          <div className="flex items-center border border-gray-300 rounded-lg px-3 py-3 focus-within:ring-2 focus-within:ring-blue-200">
+          <div
+            className="flex items-center border border-gray-300 rounded-lg px-3 py-3 focus-within:ring-2 focus-within:ring-blue-200"
+            onClick={() => textareaRef.current?.focus()}
+          >
             <textarea
               ref={textareaRef}
               value={message}
@@ -66,7 +74,10 @@ const InputBar = () => {
               aria-label="Mic"
               onClick={() => {
                 setOpenMicroPhone(true)
-                // SpeechRecognition.startListening
+                // SpeechRecognition.startListening({
+                //   continuous: true,
+                //   lang: "en-US",
+                // })
               }}
             >
               <Mic size={20} />
