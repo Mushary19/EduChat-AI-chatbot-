@@ -9,12 +9,21 @@ from rest_framework.response import Response
 
 
 class ChatLogViewSet(ModelViewSet):
-    queryset = ChatLog.objects.all().order_by("-created_at")
+    queryset = ChatLog.objects.all().order_by("created_at")
     serializer_class = ChatLogSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        session_id = self.request.query_params.get("session_id")
+
+        if session_id:
+            queryset = queryset.filter(session__session_id=session_id)
+
+        return queryset
 
     @action(["POST"], url_path="chat", detail=True)
     def chat(self, request, pk=None):
-        session = get_object_or_404(ChatSession, id=pk)
+        session = get_object_or_404(ChatSession, session_id=pk)
         prompt = request.data.get("prompt")
 
         chat_response = ""

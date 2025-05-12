@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import { loadChatSessionById, loadChatSessions } from "./api"
+import { loadChatMessages, loadChatSessionById, loadChatSessions } from "./api"
 import { ChatbotKey } from "./keys"
 
 export const useLoadChatSessions = () => {
@@ -13,5 +13,13 @@ export const useLoadChatSessionById = (session_id: string) => {
   return useQuery({
     queryKey: [],
     queryFn: () => loadChatSessionById(`/chatbot/session/${session_id}/`),
+  })
+}
+
+export const useLoadChatMessagesBySessionId = (session_id: string) => {
+  return useQuery({
+    queryKey: [ChatbotKey.CHATMESSAGE, session_id],
+    queryFn: () => loadChatMessages(`/chatbot/`, session_id),
+    enabled: !!session_id,
   })
 }

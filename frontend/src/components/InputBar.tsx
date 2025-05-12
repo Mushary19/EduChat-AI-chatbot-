@@ -1,9 +1,16 @@
 import { Mic, Send } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 import { useSpeechRecognition } from "react-speech-recognition"
+import { useSendChatMessage } from "../services/chatbot/mutations"
 import MicrophoneModal from "./MicrophoneModal"
 
-const InputBar = () => {
+interface Props {
+  sessionId: string
+}
+
+const InputBar: React.FC<Props> = (props) => {
+  const { sessionId } = props
+
   const [message, setMessage] = useState("")
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -13,6 +20,9 @@ const InputBar = () => {
 
   const trimmedMessage = message.trim()
 
+  const { mutate: sendChatMessage, isPending: isSendingMessage } =
+    useSendChatMessage(sessionId ?? "")
+
   const {
     transcript,
     listening,
@@ -20,6 +30,11 @@ const InputBar = () => {
     browserSupportsSpeechRecognition,
     isMicrophoneAvailable,
   } = useSpeechRecognition()
+
+  const handleSendMessage = () => {
+    sendChatMessage({ prompt: message })
+    setMessage("")
+  }
 
   if (!isMicrophoneAvailable) {
     return <span>Please enable your microphone to use speech service.</span>
@@ -38,7 +53,7 @@ const InputBar = () => {
 
   return (
     <>
-      <div className="w-full px-4 py-6 bg-white">
+      <div className="w-full px-4 pb-6 pt-4 bg-white z-10">
         <div className="max-w-3xl mx-auto">
           <div
             className="flex items-center border border-gray-300 rounded-lg px-3 py-3 focus-within:ring-2 focus-within:ring-blue-200"
@@ -50,7 +65,7 @@ const InputBar = () => {
               onChange={(e) => setMessage(e.target.value)}
               rows={1}
               placeholder="Type your message..."
-              className="flex-1 max-h-[200px] overflow-y-auto resize-none border-none outline-none text-sm"
+              className="flex-1 max-h-[200px] overflow-y-auto resize-none border-none outline-none text-sm text-gray-800"
             />
             {/* {listening ? (
             <button
@@ -90,6 +105,7 @@ const InputBar = () => {
                   : "hover:bg-gray-200"
               }`}
               aria-label="Send"
+              onClick={() => handleSendMessage()}
             >
               <Send size={20} />
             </button>

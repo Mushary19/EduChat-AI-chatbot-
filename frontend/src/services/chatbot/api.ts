@@ -1,3 +1,4 @@
+import type { IChatMessageBody } from "../../lib/types/chatbot/chatMessage"
 import type {
   IChatSession,
   IChatSessionBody,
@@ -5,12 +6,12 @@ import type {
 import { fetchGet, fetchPatch, fetchPost } from "../api/apiRequests"
 
 // chat logs
-export const loadChatMessages = (url: string) => {
-  return fetchGet<any>(url)
+export const loadChatMessages = (url: string, session_id: string) => {
+  return fetchGet<any>(url, { session_id })
 }
 
-export const sendChatMessage = (url: string, body: string) => {
-  return fetchPost<string, string>(url, body)
+export const sendChatMessage = (url: string, body: IChatMessageBody) => {
+  return fetchPost<string, IChatMessageBody>(url, body)
 }
 
 // session

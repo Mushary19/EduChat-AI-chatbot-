@@ -13,7 +13,7 @@ def chat_with_bot(prompt, session):
 
     url = "https://openrouter.ai/api/v1/chat/completions"
     headers = {
-        "Authorization": f"Bearer {API_KEY}",
+        "Authorization": f"Bearer ***REMOVED***",
         "Content-Type": "application/json",
     }
     data = {
@@ -33,6 +33,7 @@ def chat_with_bot(prompt, session):
             "error": "Sorry, the model did not return a valid response.",
         }
 
+    print(result)
     reply = (
         result["choices"][0]["message"]["content"] or "Sorry, i didn't understand that."
     )

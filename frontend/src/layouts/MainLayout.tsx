@@ -6,11 +6,11 @@ const MainLayout = () => {
   return (
     <main className="flex flex-col h-screen overflow-hidden">
       <Navbar />
-      <div className="flex flex-1">
+      <div className="flex flex-1 overflow-hidden">
         <div className="w-84">
           <Sidebar />
         </div>
-        <div className="flex-1">
+        <div className="flex-1 overflow-hidden">
           <Outlet />
         </div>
       </div>

@@ -3,14 +3,16 @@ import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutli
 import Popover from "@mui/material/Popover"
 import { MoreHorizontal } from "lucide-react"
 import * as React from "react"
+import { useNavigate } from "react-router-dom"
 import { useCreateChatSession } from "../services/chatbot/mutations"
 import { useLoadChatSessions } from "../services/chatbot/queries"
 
 const Sidebar = () => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const [selectedSessionId, setSelectedSessionId] = React.useState<
-    number | null
+    string | null
   >(null)
+  const navigate = useNavigate()
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
@@ -22,6 +24,10 @@ const Sidebar = () => {
 
   const open = Boolean(anchorEl)
   const id = open ? "creative-popover" : undefined
+
+  const handleSessionClick = (sessionId: string) => {
+    navigate(`/?session_id=${sessionId}`)
+  }
 
   const { data: chatSessions, isPending } = useLoadChatSessions()
   const { mutate: createSession, isPending: isCreatePending } =
@@ -54,12 +60,15 @@ const Sidebar = () => {
         </div>
 
         {chatSessions?.map((session) => {
-          const isSelected = selectedSessionId === session?.id
+          const isSelected = selectedSessionId === session?.session_id
 
           return (
             <div
               key={session.id}
-              onClick={() => setSelectedSessionId(session.id)}
+              onClick={() => {
+                setSelectedSessionId(session.session_id)
+                handleSessionClick(session.session_id)
+              }}
               className={`flex px-4 py-2 gap-3 rounded-2xl justify-between items-center group cursor-pointer transition duration-200 ${
                 isSelected ? "bg-gray-300" : "hover:bg-gray-200"
               }`}
