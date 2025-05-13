@@ -3,7 +3,7 @@ import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutli
 import Popover from "@mui/material/Popover"
 import { MoreHorizontal } from "lucide-react"
 import * as React from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import { useAuth } from "../lib/hooks/useAuth"
 import {
   useCreateChatSession,
@@ -20,6 +20,12 @@ const Sidebar = () => {
   const [openDelete, setOpenDelete] = React.useState<boolean>(false)
   const [isClickedRename, setIsClickedRename] = React.useState(false)
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+
+  React.useEffect(() => {
+    const urlSessionId = searchParams.get("session_id")
+    setSelectedSessionId(urlSessionId)
+  }, [searchParams])
 
   const toggleDelete = () => setOpenDelete((prev) => !prev)
 
