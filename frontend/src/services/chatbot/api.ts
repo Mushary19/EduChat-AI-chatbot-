@@ -1,4 +1,7 @@
-import type { IChatMessageBody } from "../../lib/types/chatbot/chatMessage"
+import type {
+  IChatMessageBody,
+  IChatMessageResponse,
+} from "../../lib/types/chatbot/chatMessage"
 import type {
   IChatSession,
   IChatSessionBody,
@@ -17,7 +20,7 @@ export const loadChatMessages = (url: string, session_id: string) => {
 }
 
 export const sendChatMessage = (url: string, body: IChatMessageBody) => {
-  return fetchPost<string, IChatMessageBody>(url, body)
+  return fetchPost<IChatMessageResponse, IChatMessageBody>(url, body)
 }
 
 // session
@@ -30,7 +33,7 @@ export const loadChatSessionById = (url: string) => {
 }
 
 export const createChatSession = (url: string, body: IChatSessionBody) => {
-  return fetchPost<string, IChatSessionBody>(url, body)
+  return fetchPost<IChatSession, IChatSessionBody>(url, body)
 }
 
 export const updateChatSession = (

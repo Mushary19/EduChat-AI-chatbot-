@@ -4,6 +4,7 @@ import Popover from "@mui/material/Popover"
 import { MoreHorizontal } from "lucide-react"
 import * as React from "react"
 import { useNavigate } from "react-router-dom"
+import { useAuth } from "../lib/hooks/useAuth"
 import {
   useCreateChatSession,
   useDeleteChatSession,
@@ -21,6 +22,8 @@ const Sidebar = () => {
   const navigate = useNavigate()
 
   const toggleDelete = () => setOpenDelete((prev) => !prev)
+
+  const { user } = useAuth()
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
@@ -49,7 +52,9 @@ const Sidebar = () => {
           <div className="relative group mb-2">
             <button
               className="w-full flex items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white font-semibold rounded-2xl shadow-md hover:scale-[1.02] hover:shadow-lg transition-transform duration-200 ease-in-out"
-              // onClick={() => createSession()}
+              onClick={() => {
+                createSession({ user: user?.id ?? 0 })
+              }}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

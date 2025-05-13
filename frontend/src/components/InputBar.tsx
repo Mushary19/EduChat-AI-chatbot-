@@ -6,18 +6,29 @@ import {
   type Dispatch,
   type SetStateAction,
 } from "react"
+import { useNavigate } from "react-router-dom"
 import { useSpeechRecognition } from "react-speech-recognition"
+import { useAuth } from "../lib/hooks/useAuth"
 import type { IChatMessageResponseBody } from "../lib/types/chatbot/chatMessage"
-import { useSendChatMessage } from "../services/chatbot/mutations"
+import {
+  useCreateChatSession,
+  useSendChatMessage,
+} from "../services/chatbot/mutations"
 import MicrophoneModal from "./MicrophoneModal"
 
 interface Props {
-  sessionId: string
+  sessionId?: string
   setOptimisticMessages: Dispatch<SetStateAction<IChatMessageResponseBody[]>>
 }
 
 const InputBar: React.FC<Props> = (props) => {
-  const { sessionId, setOptimisticMessages } = props
+  const { sessionId: initialSessionId, setOptimisticMessages } = props
+
+  const [sessionId, setSessionId] = useState<string | undefined>(
+    initialSessionId
+  )
+
+  const navigate = useNavigate()
 
   const [message, setMessage] = useState("")
   const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -28,28 +39,55 @@ const InputBar: React.FC<Props> = (props) => {
 
   const trimmedMessage = message.trim()
 
-  const { mutate: sendChatMessage, isPending: isSendingMessage } =
-    useSendChatMessage(sessionId ?? "")
+  const { user } = useAuth()
 
-  const handleSendChatMessage = (message: string) => {
-    const newMsg = {
-      id: Date.now(),
-      message: message,
-      sender: "USER" as "USER",
-      created_at: new Date().toISOString(),
+  const handleSessionClick = (sessionId: string) => {
+    navigate(`/?session_id=${sessionId}`)
+  }
+
+  const {
+    mutate: sendChatMessage,
+    isPending: isSendingMessage,
+    isSuccess,
+  } = useSendChatMessage()
+
+  const { mutateAsync: createSession } = useCreateChatSession()
+
+  const handleSendChatMessage = async (message: string) => {
+    const send = (sessionId: string) => {
+      const newMsg = {
+        id: Date.now(),
+        message: message,
+        sender: "USER" as "USER",
+        created_at: new Date().toISOString(),
+      }
+
+      setOptimisticMessages((prev) => [...prev, newMsg])
+
+      sendChatMessage(
+        { sessionId, prompt: message },
+        {
+          onSettled: () => {
+            setOptimisticMessages([])
+            setMessage("")
+          },
+        }
+      )
     }
 
-    setOptimisticMessages((prev) => [...prev, newMsg])
-
-    sendChatMessage(
-      { prompt: message },
-      {
-        onSettled: () => {
-          setOptimisticMessages([])
-          setMessage("")
-        },
+    if (!sessionId) {
+      try {
+        const response = await createSession({ user: user?.id ?? 0 })
+        const newSessionId = response.session_id
+        setSessionId(newSessionId)
+        handleSessionClick(newSessionId)
+        send(newSessionId)
+      } catch (error: any) {
+        console.log(error)
       }
-    )
+    } else {
+      send(sessionId)
+    }
   }
 
   const {

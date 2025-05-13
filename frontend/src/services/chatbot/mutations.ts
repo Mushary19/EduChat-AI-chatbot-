@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "react-toastify"
-import type { IChatMessageBody } from "../../lib/types/chatbot/chatMessage"
+import type { IChatMessageResponse } from "../../lib/types/chatbot/chatMessage"
 import type { IChatSessionBody } from "../../lib/types/chatbot/chatSession"
 import { createChatSession, deleteChatSession, sendChatMessage } from "./api"
 import { ChatbotKey } from "./keys"
@@ -11,19 +11,27 @@ export const useCreateChatSession = () => {
     mutationFn: (body: IChatSessionBody) =>
       createChatSession("/chatbot/session/", body),
     onSuccess: () => {
-      //   queryClient.invalidateQueries({ queryKey: [ChatbotKey.CHATSESSION] })
+      queryClient.invalidateQueries({ queryKey: [ChatbotKey.CHATSESSION] })
+    },
+    onError: (error: any) => {
+      toast.error(error.data.error || "Something went wrong!")
     },
   })
 }
 
-export const useSendChatMessage = (sessionId: string) => {
+export const useSendChatMessage = () => {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (body: IChatMessageBody) =>
-      sendChatMessage(`/chatbot/${sessionId}/chat/`, body),
-    onSuccess: () => {
+    mutationFn: ({
+      sessionId,
+      prompt,
+    }: {
+      sessionId: string
+      prompt: string
+    }) => sendChatMessage(`/chatbot/${sessionId}/chat/`, { prompt }),
+    onSuccess: (data: IChatMessageResponse) => {
       queryClient.invalidateQueries({
-        queryKey: [ChatbotKey.CHATMESSAGE, sessionId],
+        queryKey: [ChatbotKey.CHATMESSAGE, data.session_id],
       })
     },
     onError: (error: any) => {

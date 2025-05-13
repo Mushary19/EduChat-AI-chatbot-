@@ -10,7 +10,7 @@ export interface IChatSession {
 }
 
 export interface IChatSessionBody {
-  user: IUser
+  user: number
 }
 
 export interface IChatSessionUpdateBody {

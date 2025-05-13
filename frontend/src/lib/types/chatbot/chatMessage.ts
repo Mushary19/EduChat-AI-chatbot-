@@ -11,3 +11,8 @@ export interface IChatMessageResponseBody {
 export interface IChatMessageBody {
   prompt: string
 }
+
+export interface IChatMessageResponse {
+  response?: string
+  session_id: string
+}

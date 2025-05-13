@@ -1,8 +1,9 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useSearchParams } from "react-router-dom"
 import InputBar from "../../components/InputBar"
 import type { IChatMessageResponseBody } from "../../lib/types/chatbot/chatMessage"
 import ChatView from "./ChatView"
+import InitialChatView from "./InitialChatView"
 
 const Chatbot = () => {
   const [searchParams] = useSearchParams()
@@ -12,15 +13,30 @@ const Chatbot = () => {
     IChatMessageResponseBody[]
   >([])
 
+  useEffect(() => {
+    setOptimisticMessages([])
+  }, [sessionId])
+
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-1 overflow-hidden">
-        <ChatView optimisticMessages={optimisticMessages} />
-      </div>
-      <InputBar
-        sessionId={sessionId ?? ""}
-        setOptimisticMessages={setOptimisticMessages}
-      />
+      {!sessionId ? (
+        <div className="my-auto">
+          <InitialChatView setOptimisticMessages={setOptimisticMessages} />
+        </div>
+      ) : (
+        <>
+          <div className="flex-1 overflow-hidden">
+            <ChatView
+              optimisticMessages={optimisticMessages}
+              sessionId={sessionId ?? ""}
+            />
+          </div>
+          <InputBar
+            sessionId={sessionId ?? ""}
+            setOptimisticMessages={setOptimisticMessages}
+          />
+        </>
+      )}
     </div>
   )
 }
