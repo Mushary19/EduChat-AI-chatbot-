@@ -12,3 +12,7 @@ export interface IChatSession {
 export interface IChatSessionBody {
   user: IUser
 }
+
+export interface IChatSessionUpdateBody {
+  title: string
+}

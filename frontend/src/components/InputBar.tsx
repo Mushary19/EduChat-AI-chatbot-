@@ -1,15 +1,23 @@
 import { Mic, Send } from "lucide-react"
-import { useEffect, useRef, useState } from "react"
+import {
+  useEffect,
+  useRef,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react"
 import { useSpeechRecognition } from "react-speech-recognition"
+import type { IChatMessageResponseBody } from "../lib/types/chatbot/chatMessage"
 import { useSendChatMessage } from "../services/chatbot/mutations"
 import MicrophoneModal from "./MicrophoneModal"
 
 interface Props {
   sessionId: string
+  setOptimisticMessages: Dispatch<SetStateAction<IChatMessageResponseBody[]>>
 }
 
 const InputBar: React.FC<Props> = (props) => {
-  const { sessionId } = props
+  const { sessionId, setOptimisticMessages } = props
 
   const [message, setMessage] = useState("")
   const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -23,6 +31,27 @@ const InputBar: React.FC<Props> = (props) => {
   const { mutate: sendChatMessage, isPending: isSendingMessage } =
     useSendChatMessage(sessionId ?? "")
 
+  const handleSendChatMessage = (message: string) => {
+    const newMsg = {
+      id: Date.now(),
+      message: message,
+      sender: "USER" as "USER",
+      created_at: new Date().toISOString(),
+    }
+
+    setOptimisticMessages((prev) => [...prev, newMsg])
+
+    sendChatMessage(
+      { prompt: message },
+      {
+        onSettled: () => {
+          setOptimisticMessages([])
+          setMessage("")
+        },
+      }
+    )
+  }
+
   const {
     transcript,
     listening,
@@ -30,11 +59,6 @@ const InputBar: React.FC<Props> = (props) => {
     browserSupportsSpeechRecognition,
     isMicrophoneAvailable,
   } = useSpeechRecognition()
-
-  const handleSendMessage = () => {
-    sendChatMessage({ prompt: message })
-    setMessage("")
-  }
 
   if (!isMicrophoneAvailable) {
     return <span>Please enable your microphone to use speech service.</span>
@@ -66,6 +90,18 @@ const InputBar: React.FC<Props> = (props) => {
               rows={1}
               placeholder="Type your message..."
               className="flex-1 max-h-[200px] overflow-y-auto resize-none border-none outline-none text-sm text-gray-800"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  const message = e.currentTarget.value.trim()
+
+                  if (message) {
+                    handleSendChatMessage(message)
+                    setMessage("")
+                    e.currentTarget.value = ""
+                  }
+                  return
+                }
+              }}
             />
             {/* {listening ? (
             <button
@@ -98,14 +134,17 @@ const InputBar: React.FC<Props> = (props) => {
               <Mic size={20} />
             </button>
             <button
-              disabled={trimmedMessage === ""}
+              disabled={trimmedMessage === "" || isSendingMessage}
               className={`ml-2 text-blue-500 hover:text-blue-600 transition-all duration-100 border border-gray-300 rounded-full p-2 ${
                 trimmedMessage === ""
                   ? "opacity-50 cursor-not-allowed"
                   : "hover:bg-gray-200"
               }`}
               aria-label="Send"
-              onClick={() => handleSendMessage()}
+              onClick={() => {
+                handleSendChatMessage(message)
+                setMessage("")
+              }}
             >
               <Send size={20} />
             </button>

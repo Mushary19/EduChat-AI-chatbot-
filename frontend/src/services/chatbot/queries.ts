@@ -11,7 +11,7 @@ export const useLoadChatSessions = () => {
 
 export const useLoadChatSessionById = (session_id: string) => {
   return useQuery({
-    queryKey: [],
+    queryKey: [ChatbotKey.CHATSESSION, session_id],
     queryFn: () => loadChatSessionById(`/chatbot/session/${session_id}/`),
   })
 }

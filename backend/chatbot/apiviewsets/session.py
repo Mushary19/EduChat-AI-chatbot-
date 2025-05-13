@@ -7,6 +7,7 @@ from chatbot.models.session import ChatSession
 class ChatSessionViewSet(ModelViewSet):
     queryset = ChatSession.objects.all().order_by("-created_at")
     serializer_class = ChatSessionSerializer
+    lookup_field = "session_id"
 
     def get_queryset(self):
         queryset = super().get_queryset()

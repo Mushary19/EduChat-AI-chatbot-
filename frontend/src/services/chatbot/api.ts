@@ -2,8 +2,14 @@ import type { IChatMessageBody } from "../../lib/types/chatbot/chatMessage"
 import type {
   IChatSession,
   IChatSessionBody,
+  IChatSessionUpdateBody,
 } from "../../lib/types/chatbot/chatSession"
-import { fetchGet, fetchPatch, fetchPost } from "../api/apiRequests"
+import {
+  fetchDelete,
+  fetchGet,
+  fetchPatch,
+  fetchPost,
+} from "../api/apiRequests"
 
 // chat logs
 export const loadChatMessages = (url: string, session_id: string) => {
@@ -27,6 +33,13 @@ export const createChatSession = (url: string, body: IChatSessionBody) => {
   return fetchPost<string, IChatSessionBody>(url, body)
 }
 
-export const updateChatSession = (url: string, body: any) => {
-  return fetchPatch<string, any>(url, body)
+export const updateChatSession = (
+  url: string,
+  body: IChatSessionUpdateBody
+) => {
+  return fetchPatch<string, IChatSessionUpdateBody>(url, body)
+}
+
+export const deleteChatSession = (url: string) => {
+  return fetchDelete<string>(url)
 }
