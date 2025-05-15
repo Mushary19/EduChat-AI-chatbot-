@@ -129,7 +129,8 @@ const InputBar: React.FC<Props> = (props) => {
               placeholder="Type your message..."
               className="flex-1 max-h-[200px] overflow-y-auto resize-none border-none outline-none text-sm text-gray-800"
               onKeyDown={(e) => {
-                if (e.key === "Enter") {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault()
                   const message = e.currentTarget.value.trim()
 
                   if (message) {

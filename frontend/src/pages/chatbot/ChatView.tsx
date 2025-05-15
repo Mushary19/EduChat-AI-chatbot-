@@ -1,3 +1,4 @@
+import { Copy, Recycle } from "lucide-react"
 import ChatLoader from "../../components/ChatLoader"
 import { useAuth } from "../../lib/hooks/useAuth"
 import type { IChatMessageResponseBody } from "../../lib/types/chatbot/chatMessage"
@@ -36,18 +37,24 @@ const ChatView: React.FC<Props> = (props) => {
             {(allMessages ?? []).map((msg: IChatMessageResponseBody) => (
               <div
                 key={msg.id}
-                className={`flex ${
+                className={`w-full group flex ${
                   msg.sender === "USER" ? "justify-end" : "justify-start"
                 }`}
               >
-                <div
-                  className={`max-w-[75%] px-4 py-2 rounded-xl text-sm shadow ${
-                    msg.sender === "USER"
-                      ? "bg-blue-500 text-white rounded-br-none"
-                      : "bg-gray-100 text-gray-900 rounded-bl-none"
-                  }`}
-                >
-                  {msg.message}
+                <div className="flex flex-col items-end max-w-[75%]">
+                  <div
+                    className={`px-4 py-2 rounded-xl text-sm shadow ${
+                      msg.sender === "USER"
+                        ? "bg-blue-500 text-white rounded-br-none"
+                        : "bg-gray-100 text-gray-900 rounded-bl-none"
+                    }`}
+                  >
+                    {msg.message}
+                  </div>
+                  <div className="flex items-center gap-2 mt-3 text-gray-400 hover:text-gray-600 opacity-0 group-hover:opacity-100 transition duration-300">
+                    <Copy className="w-4 h-4 cursor-pointer" />
+                    <Recycle className="w-4 h-4 cursor-pointer" />
+                  </div>
                 </div>
               </div>
             ))}
