@@ -22,11 +22,11 @@ interface Props {
 }
 
 const InputBar: React.FC<Props> = (props) => {
-  const { sessionId: initialSessionId, setOptimisticMessages } = props
+  const { sessionId, setOptimisticMessages } = props
 
-  const [sessionId, setSessionId] = useState<string | undefined>(
-    initialSessionId
-  )
+  // const [sessionId, setSessionId] = useState<string | undefined>(
+  //   initialSessionId
+  // )
 
   const navigate = useNavigate()
 
@@ -44,6 +44,14 @@ const InputBar: React.FC<Props> = (props) => {
   const handleSessionClick = (sessionId: string) => {
     navigate(`/?session_id=${sessionId}`)
   }
+
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition,
+    isMicrophoneAvailable,
+  } = useSpeechRecognition()
 
   const {
     mutate: sendChatMessage,
@@ -79,7 +87,7 @@ const InputBar: React.FC<Props> = (props) => {
       try {
         const response = await createSession({ user: user?.id ?? 0 })
         const newSessionId = response.session_id
-        setSessionId(newSessionId)
+        // setSessionId(newSessionId)
         handleSessionClick(newSessionId)
         send(newSessionId)
       } catch (error: any) {
@@ -90,13 +98,18 @@ const InputBar: React.FC<Props> = (props) => {
     }
   }
 
-  const {
-    transcript,
-    listening,
-    resetTranscript,
-    browserSupportsSpeechRecognition,
-    isMicrophoneAvailable,
-  } = useSpeechRecognition()
+  const handleKeyEnter = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault()
+
+      const message = e.currentTarget.value.trim()
+      if (message) {
+        handleSendChatMessage(message)
+        setMessage("")
+        e.currentTarget.value = ""
+      }
+    }
+  }
 
   if (!isMicrophoneAvailable) {
     return <span>Please enable your microphone to use speech service.</span>
@@ -115,7 +128,7 @@ const InputBar: React.FC<Props> = (props) => {
 
   return (
     <>
-      <div className="w-full px-4 pb-6 pt-4 bg-white z-10">
+      <div className="w-full px-4 pb-6 pt-2 bg-white z-10">
         <div className="max-w-3xl mx-auto">
           <div
             className="flex items-center border border-gray-300 rounded-lg px-3 py-3 focus-within:ring-2 focus-within:ring-blue-200"
@@ -129,17 +142,7 @@ const InputBar: React.FC<Props> = (props) => {
               placeholder="Type your message..."
               className="flex-1 max-h-[200px] overflow-y-auto resize-none border-none outline-none text-sm text-gray-800"
               onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault()
-                  const message = e.currentTarget.value.trim()
-
-                  if (message) {
-                    handleSendChatMessage(message)
-                    setMessage("")
-                    e.currentTarget.value = ""
-                  }
-                  return
-                }
+                handleKeyEnter(e)
               }}
             />
             {/* {listening ? (

@@ -5,6 +5,7 @@ import { MoreHorizontal } from "lucide-react"
 import * as React from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { useAuth } from "../lib/hooks/useAuth"
+import type { IChatSession } from "../lib/types/chatbot/chatSession"
 import {
   useCreateChatSession,
   useDeleteChatSession,
@@ -12,26 +13,22 @@ import {
 import { useLoadChatSessions } from "../services/chatbot/queries"
 import ConfirmDelete from "./ConfirmDelete"
 
-const Sidebar = () => {
+const ChatSessionItem = ({
+  session,
+  isSelected,
+  onSelect,
+  onDelete,
+}: {
+  session: IChatSession
+  isSelected: boolean
+  onSelect: (id: string) => void
+  onDelete: (id: string) => void
+}) => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
-  const [selectedSessionId, setSelectedSessionId] = React.useState<
-    string | null
-  >(null)
   const [openDelete, setOpenDelete] = React.useState<boolean>(false)
-  const [isClickedRename, setIsClickedRename] = React.useState(false)
-  const navigate = useNavigate()
-  const [searchParams] = useSearchParams()
-
-  React.useEffect(() => {
-    const urlSessionId = searchParams.get("session_id")
-    setSelectedSessionId(urlSessionId)
-  }, [searchParams])
-
-  const toggleDelete = () => setOpenDelete((prev) => !prev)
-
-  const { user } = useAuth()
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation()
     setAnchorEl(event.currentTarget)
   }
 
@@ -40,16 +37,122 @@ const Sidebar = () => {
   }
 
   const open = Boolean(anchorEl)
-  const id = open ? "creative-popover" : undefined
+  const id = open ? `popover-${session.session_id}` : undefined
+
+  const toggleDelete = () => setOpenDelete((prev) => !prev)
+
+  return (
+    <div
+      key={session.id}
+      onClick={() => onSelect(session.session_id)}
+      className={`flex px-4 py-2 gap-3 rounded-2xl justify-between items-center group cursor-pointer transition duration-200 ${
+        isSelected ? "bg-gray-300" : "hover:bg-gray-200"
+      }`}
+    >
+      <span>{session.title}</span>
+      <button
+        onClick={(e) => {
+          e.stopPropagation()
+          handleClick(e)
+        }}
+        className="opacity-0 group-hover:opacity-100 transition duration-200"
+      >
+        <MoreHorizontal />
+      </button>
+
+      <Popover
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        PaperProps={{
+          sx: {
+            borderRadius: 2,
+            boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
+            minWidth: 160,
+          },
+        }}
+      >
+        <div className="bg-white rounded-xl p-2">
+          <ul className="text-sm text-gray-700">
+            <li
+              className="flex justify-between items-center px-4 py-2 rounded-lg hover:bg-gray-100 cursor-pointer transition"
+              onClick={() => {
+                // Handle rename
+                handleClose()
+              }}
+            >
+              Rename
+              <DriveFileRenameOutlineIcon fontSize="small" />
+            </li>
+            <li
+              className="flex justify-between items-center px-4 py-2 rounded-lg hover:bg-gray-100 cursor-pointer transition"
+              onClick={() => {
+                setOpenDelete(true)
+                handleClose()
+              }}
+            >
+              Delete
+              <DeleteOutlineOutlinedIcon fontSize="small" />
+            </li>
+          </ul>
+        </div>
+      </Popover>
+
+      {openDelete && (
+        <ConfirmDelete
+          open={openDelete}
+          onClose={toggleDelete}
+          onConfirm={() => {
+            onDelete(session.session_id)
+            toggleDelete()
+          }}
+        />
+      )}
+    </div>
+  )
+}
+
+const Sidebar = () => {
+  const [selectedSessionId, setSelectedSessionId] = React.useState<
+    string | null
+  >(null)
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+
+  const { data: chatSessions, isPending } = useLoadChatSessions()
+  const { mutateAsync: createSession, isPending: isCreatePending } =
+    useCreateChatSession()
+  const { mutate: deleteSession, isSuccess: isDeleted } = useDeleteChatSession()
+
+  React.useEffect(() => {
+    const urlSessionId = searchParams.get("session_id")
+    setSelectedSessionId(urlSessionId)
+  }, [searchParams])
+
+  const { user } = useAuth()
 
   const handleSessionClick = (sessionId: string) => {
+    setSelectedSessionId(sessionId)
     navigate(`/?session_id=${sessionId}`)
   }
 
-  const { data: chatSessions, isPending } = useLoadChatSessions()
-  const { mutate: createSession, isPending: isCreatePending } =
-    useCreateChatSession()
-  const { mutate: deleteSession } = useDeleteChatSession()
+  const handleCreateChatSession = async () => {
+    const response = await createSession({ user: user?.id ?? 0 })
+    if (response.session_id) {
+      navigate(`/?session_id=${response.session_id}`)
+    }
+  }
+
+  React.useEffect(() => {
+    if (isDeleted) {
+      navigate("/")
+    }
+  }, [isDeleted])
 
   return (
     <>
@@ -59,7 +162,7 @@ const Sidebar = () => {
             <button
               className="w-full flex items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white font-semibold rounded-2xl shadow-md hover:scale-[1.02] hover:shadow-lg transition-transform duration-200 ease-in-out"
               onClick={() => {
-                createSession({ user: user?.id ?? 0 })
+                handleCreateChatSession()
               }}
             >
               <svg
@@ -80,80 +183,17 @@ const Sidebar = () => {
             </button>
           </div>
 
-          {chatSessions?.map((session) => {
-            const isSelected = selectedSessionId === session?.session_id
-
-            return (
-              <div
-                key={session.id}
-                onClick={() => {
-                  setSelectedSessionId(session.session_id)
-                  handleSessionClick(session.session_id)
-                }}
-                className={`flex px-4 py-2 gap-3 rounded-2xl justify-between items-center group cursor-pointer transition duration-200 ${
-                  isSelected ? "bg-gray-300" : "hover:bg-gray-200"
-                }`}
-              >
-                <span>{session.title}</span>
-                <button
-                  onClick={handleClick}
-                  className="opacity-0 group-hover:opacity-100 transition duration-200"
-                >
-                  <MoreHorizontal />
-                </button>
-
-                <Popover
-                  id={id}
-                  open={open}
-                  anchorEl={anchorEl}
-                  onClose={handleClose}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "left",
-                  }}
-                  PaperProps={{
-                    sx: {
-                      borderRadius: 2,
-                      boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
-                      minWidth: 160,
-                    },
-                  }}
-                >
-                  <div className="bg-white rounded-xl p-2">
-                    <ul className="text-sm text-gray-700">
-                      <li
-                        className="flex justify-between items-center px-4 py-2 rounded-lg hover:bg-gray-100 cursor-pointer transition"
-                        onClick={() => setIsClickedRename(true)}
-                      >
-                        Rename
-                        <DriveFileRenameOutlineIcon fontSize="small" />
-                      </li>
-                      <li
-                        className="flex justify-between items-center px-4 py-2 rounded-lg hover:bg-gray-100 cursor-pointer transition"
-                        onClick={() => {
-                          setOpenDelete(true)
-                          handleClose()
-                        }}
-                      >
-                        Delete
-                        <DeleteOutlineOutlinedIcon fontSize="small" />
-                      </li>
-                    </ul>
-                  </div>
-                </Popover>
-              </div>
-            )
-          })}
+          {chatSessions?.map((session) => (
+            <ChatSessionItem
+              key={session.session_id}
+              session={session}
+              isSelected={selectedSessionId === session.session_id}
+              onSelect={handleSessionClick}
+              onDelete={deleteSession}
+            />
+          ))}
         </div>
       </section>
-
-      {openDelete && (
-        <ConfirmDelete
-          open={openDelete}
-          onClose={toggleDelete}
-          onConfirm={() => deleteSession(selectedSessionId ?? "")}
-        />
-      )}
     </>
   )
 }

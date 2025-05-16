@@ -29,6 +29,7 @@ const Chatbot = () => {
             <ChatView
               optimisticMessages={optimisticMessages}
               sessionId={sessionId ?? ""}
+              setOptimisticMessages={setOptimisticMessages}
             />
           </div>
           <InputBar

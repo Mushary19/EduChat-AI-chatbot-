@@ -1,16 +1,20 @@
+import { Tooltip } from "@mui/material"
 import { Copy, Recycle } from "lucide-react"
+import type { Dispatch, SetStateAction } from "react"
 import ChatLoader from "../../components/ChatLoader"
 import { useAuth } from "../../lib/hooks/useAuth"
 import type { IChatMessageResponseBody } from "../../lib/types/chatbot/chatMessage"
 import { useLoadChatMessagesBySessionId } from "../../services/chatbot/queries"
+import InitialChatView from "./InitialChatView"
 
 interface Props {
   optimisticMessages: IChatMessageResponseBody[]
   sessionId: string
+  setOptimisticMessages: Dispatch<SetStateAction<IChatMessageResponseBody[]>>
 }
 
 const ChatView: React.FC<Props> = (props) => {
-  const { optimisticMessages, sessionId } = props
+  const { optimisticMessages, sessionId, setOptimisticMessages } = props
   console.log(sessionId)
 
   const { user } = useAuth()
@@ -28,36 +32,64 @@ const ChatView: React.FC<Props> = (props) => {
   return (
     <>
       {sessionId && allMessages.length === 0 ? (
-        <div className="flex flex-col justify-center">{initialChatBanner}</div>
+        <div className="flex flex-col h-full">
+          <div className="my-auto">
+            <InitialChatView setOptimisticMessages={setOptimisticMessages} />
+          </div>
+        </div>
       ) : isPending ? (
         <ChatLoader />
       ) : (
         <div className="h-full overflow-y-auto px-4 py-6 bg-white">
           <div className="max-w-3xl mx-auto space-y-4">
-            {(allMessages ?? []).map((msg: IChatMessageResponseBody) => (
-              <div
-                key={msg.id}
-                className={`w-full group flex ${
-                  msg.sender === "USER" ? "justify-end" : "justify-start"
-                }`}
-              >
-                <div className="flex flex-col items-end max-w-[75%]">
+            {(allMessages ?? []).map((msg: IChatMessageResponseBody) => {
+              const isUser = msg.sender === "USER"
+
+              return (
+                <div
+                  key={msg.id}
+                  className={`w-full  flex ${
+                    isUser ? "justify-end" : "justify-start"
+                  }`}
+                >
                   <div
-                    className={`px-4 py-2 rounded-xl text-sm shadow ${
-                      msg.sender === "USER"
-                        ? "bg-blue-500 text-white rounded-br-none"
-                        : "bg-gray-100 text-gray-900 rounded-bl-none"
+                    className={`flex group flex-col max-w-[75%] ${
+                      isUser ? "items-end" : "items-start"
                     }`}
                   >
-                    {msg.message}
-                  </div>
-                  <div className="flex items-center gap-2 mt-3 text-gray-400 hover:text-gray-600 opacity-0 group-hover:opacity-100 transition duration-300">
-                    <Copy className="w-4 h-4 cursor-pointer" />
-                    <Recycle className="w-4 h-4 cursor-pointer" />
+                    {/* Message Bubble */}
+                    <div
+                      className={`px-4 py-2 rounded-xl text-sm shadow ${
+                        isUser
+                          ? "bg-blue-500 text-white rounded-br-none"
+                          : "bg-gray-100 text-gray-900 rounded-bl-none"
+                      }`}
+                    >
+                      {msg.message}
+                    </div>
+
+                    {/* Icon Row */}
+                    <div
+                      className={`flex gap-3 mt-2 opacity-0 group-hover:opacity-100 transition duration-300 ${
+                        isUser ? "justify-end" : "justify-start"
+                      }`}
+                    >
+                      <Tooltip
+                        title="Copy"
+                        onClick={() => {
+                          navigator.clipboard.writeText(msg.message || "")
+                        }}
+                      >
+                        <Copy className="w-4 h-4 cursor-pointer text-gray-400 hover:text-gray-600" />
+                      </Tooltip>
+                      <Tooltip title="Regenerate">
+                        <Recycle className="w-4 h-4 cursor-pointer text-gray-400 hover:text-gray-600" />
+                      </Tooltip>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       )}
