@@ -24,8 +24,8 @@ export const sendChatMessage = (url: string, body: IChatMessageBody) => {
 }
 
 // session
-export const loadChatSessions = (url: string) => {
-  return fetchGet<IChatSession[]>(url)
+export const loadChatSessions = (url: string, userId: number) => {
+  return fetchGet<IChatSession[]>(url, { user_id: userId })
 }
 
 export const loadChatSessionById = (url: string) => {

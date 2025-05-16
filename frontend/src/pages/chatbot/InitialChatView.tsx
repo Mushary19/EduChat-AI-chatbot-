@@ -11,7 +11,7 @@ const InitialChatView: React.FC<Props> = ({ setOptimisticMessages }) => {
     <div className="flex-1 flex-col items-center justify-center bg-white text-center px-4">
       <div>
         <h2 className="text-4xl font-semibold text-gray-700">
-          Welcome to Chatbot!
+          Welcome to EduChat!
         </h2>
         <p className="text-gray-500 text-lg mt-2">
           Please select a session from the sidebar to view or continue the

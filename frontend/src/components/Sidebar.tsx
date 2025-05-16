@@ -124,7 +124,9 @@ const Sidebar = () => {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
 
-  const { data: chatSessions, isPending } = useLoadChatSessions()
+  const { user } = useAuth()
+
+  const { data: chatSessions, isPending } = useLoadChatSessions(user?.id ?? 0)
   const { mutateAsync: createSession, isPending: isCreatePending } =
     useCreateChatSession()
   const { mutate: deleteSession, isSuccess: isDeleted } = useDeleteChatSession()
@@ -133,8 +135,6 @@ const Sidebar = () => {
     const urlSessionId = searchParams.get("session_id")
     setSelectedSessionId(urlSessionId)
   }, [searchParams])
-
-  const { user } = useAuth()
 
   const handleSessionClick = (sessionId: string) => {
     setSelectedSessionId(sessionId)
