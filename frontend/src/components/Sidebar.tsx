@@ -26,6 +26,10 @@ const ChatSessionItem = ({
 }) => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const [openDelete, setOpenDelete] = React.useState<boolean>(false)
+  const [isEditing, setIsEditing] = React.useState(false)
+  const [updatedTitle, setUpdatedTitle] = React.useState(session.title)
+
+  const titleRef = React.useRef<HTMLInputElement>(null)
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation()
@@ -49,7 +53,24 @@ const ChatSessionItem = ({
         isSelected ? "bg-gray-300" : "hover:bg-gray-200"
       }`}
     >
-      <span>{session.title}</span>
+      <input
+        value={!isEditing ? `${updatedTitle.substring(0, 20)}` : updatedTitle}
+        ref={titleRef}
+        readOnly={!isEditing}
+        onClick={(e) => {
+          if (!isEditing) return
+          e.stopPropagation()
+        }}
+        className={`bg-transparent outline-none border-none w-full cursor-pointer ${
+          isEditing ? "bg-white px-1 py-0.5 rounded" : ""
+        }`}
+        onChange={(e) => setUpdatedTitle(e.target.value)}
+        onBlur={() => {
+          setIsEditing(false)
+        }}
+        // onKeyDown={() => {
+        // }}
+      />
       <button
         onClick={(e) => {
           e.stopPropagation()
@@ -57,7 +78,7 @@ const ChatSessionItem = ({
         }}
         className="opacity-0 group-hover:opacity-100 transition duration-200"
       >
-        <MoreHorizontal />
+        <MoreHorizontal className="cursor-pointer" />
       </button>
 
       <Popover
@@ -84,6 +105,10 @@ const ChatSessionItem = ({
               onClick={() => {
                 // Handle rename
                 handleClose()
+                setIsEditing(true)
+                setTimeout(() => {
+                  titleRef?.current?.focus()
+                }, 100)
               }}
             >
               Rename

@@ -7,10 +7,12 @@ import DialogTitle from "@mui/material/DialogTitle"
 import IconButton from "@mui/material/IconButton"
 import { styled } from "@mui/material/styles"
 import { Pause } from "lucide-react"
+import type { Dispatch, SetStateAction } from "react"
 
 interface Props {
   open: boolean
   onClose: VoidFunction
+  setIsClosedMicroPhone: Dispatch<SetStateAction<boolean>>
 }
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -30,7 +32,11 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   },
 }))
 
-export default function MicrophoneModal({ open, onClose }: Props) {
+export default function MicrophoneModal({
+  open,
+  onClose,
+  setIsClosedMicroPhone,
+}: Props) {
   return (
     <BootstrapDialog
       onClose={onClose}
@@ -72,9 +78,13 @@ export default function MicrophoneModal({ open, onClose }: Props) {
             className="text-white bg-red-500 hover:bg-red-600 transition-all duration-200 rounded-full p-4 shadow-md
              hover:ring-2 hover:ring-offset-2 hover:ring-red-400"
             aria-label="Pause Mic"
+            onClick={() => {
+              onClose()
+              setIsClosedMicroPhone(true)
+            }}
             // onClick={SpeechRecognition.stopListening}
           >
-            <Pause size={40} />
+            <Pause size={40} className="cursor-pointer" />
           </button>
         </div>
       </DialogContent>

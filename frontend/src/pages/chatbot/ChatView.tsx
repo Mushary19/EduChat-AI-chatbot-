@@ -1,5 +1,5 @@
 import { Tooltip } from "@mui/material"
-import { Copy, Recycle } from "lucide-react"
+import { Copy, Recycle, ThumbsDown, ThumbsUp } from "lucide-react"
 import type { Dispatch, SetStateAction } from "react"
 import ChatLoader from "../../components/ChatLoader"
 import { useAuth } from "../../lib/hooks/useAuth"
@@ -74,6 +74,12 @@ const ChatView: React.FC<Props> = (props) => {
                         isUser ? "justify-end" : "justify-start"
                       }`}
                     >
+                      <Tooltip title="like">
+                        <ThumbsUp className="w-4 h-4 cursor-pointer text-gray-400 hover:text-gray-600" />
+                      </Tooltip>
+                      <Tooltip title="dislike">
+                        <ThumbsDown className="w-4 h-4 cursor-pointer text-gray-400 hover:text-gray-600" />
+                      </Tooltip>
                       <Tooltip
                         title="Copy"
                         onClick={() => {

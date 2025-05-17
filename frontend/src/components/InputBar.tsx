@@ -23,17 +23,13 @@ interface Props {
 
 const InputBar: React.FC<Props> = (props) => {
   const { sessionId, setOptimisticMessages } = props
-
-  // const [sessionId, setSessionId] = useState<string | undefined>(
-  //   initialSessionId
-  // )
-
   const navigate = useNavigate()
 
   const [message, setMessage] = useState("")
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   const [openMicroPhone, setOpenMicroPhone] = useState(false)
+  const [isClosedMicroPhone, setIsClosedMicroPhone] = useState(false)
 
   const toggleOpenMicroPhone = () => setOpenMicroPhone((prev) => !prev)
 
@@ -44,6 +40,8 @@ const InputBar: React.FC<Props> = (props) => {
   const handleSessionClick = (sessionId: string) => {
     navigate(`/?session_id=${sessionId}`)
   }
+
+  console.log(isClosedMicroPhone)
 
   const {
     transcript,
@@ -195,7 +193,11 @@ const InputBar: React.FC<Props> = (props) => {
       </div>
 
       {openMicroPhone && (
-        <MicrophoneModal open={openMicroPhone} onClose={toggleOpenMicroPhone} />
+        <MicrophoneModal
+          open={openMicroPhone}
+          onClose={toggleOpenMicroPhone}
+          setIsClosedMicroPhone={setIsClosedMicroPhone}
+        />
       )}
     </>
   )
