@@ -12,6 +12,7 @@ const Chatbot = () => {
   const [optimisticMessages, setOptimisticMessages] = useState<
     IChatMessageResponseBody[]
   >([])
+  const [isSendingMessage, setIsSendingMessage] = useState(false)
 
   useEffect(() => {
     setOptimisticMessages([])
@@ -30,11 +31,14 @@ const Chatbot = () => {
               optimisticMessages={optimisticMessages}
               sessionId={sessionId ?? ""}
               setOptimisticMessages={setOptimisticMessages}
+              isSendingMessage={isSendingMessage}
             />
           </div>
           <InputBar
             sessionId={sessionId ?? ""}
             setOptimisticMessages={setOptimisticMessages}
+            setIsSendingMessage={setIsSendingMessage}
+            isSendingMessage={isSendingMessage}
           />
         </>
       )}

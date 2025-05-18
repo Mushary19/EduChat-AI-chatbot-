@@ -1,7 +1,8 @@
 import { Tooltip } from "@mui/material"
-import { Copy, Recycle, ThumbsDown, ThumbsUp } from "lucide-react"
-import type { Dispatch, SetStateAction } from "react"
+import { Copy, ThumbsDown, ThumbsUp } from "lucide-react"
+import { useEffect, type Dispatch, type SetStateAction } from "react"
 import ChatLoader from "../../components/ChatLoader"
+import MessageLoader from "../../components/MessageLoader"
 import { useAuth } from "../../lib/hooks/useAuth"
 import type { IChatMessageResponseBody } from "../../lib/types/chatbot/chatMessage"
 import { useLoadChatMessagesBySessionId } from "../../services/chatbot/queries"
@@ -11,10 +12,16 @@ interface Props {
   optimisticMessages: IChatMessageResponseBody[]
   sessionId: string
   setOptimisticMessages: Dispatch<SetStateAction<IChatMessageResponseBody[]>>
+  isSendingMessage: boolean
 }
 
 const ChatView: React.FC<Props> = (props) => {
-  const { optimisticMessages, sessionId, setOptimisticMessages } = props
+  const {
+    optimisticMessages,
+    sessionId,
+    setOptimisticMessages,
+    isSendingMessage,
+  } = props
   console.log(sessionId)
 
   const { user } = useAuth()
@@ -24,10 +31,16 @@ const ChatView: React.FC<Props> = (props) => {
   const { data: chatMessages, isPending } = useLoadChatMessagesBySessionId(
     sessionId ?? ""
   )
-
   const allMessages = [...(chatMessages ?? []), ...optimisticMessages]
 
   console.log(optimisticMessages)
+
+  console.log(isSendingMessage, "sending message")
+
+  useEffect(() => {
+    const el = document.querySelector("#chat-scroll-anchor")
+    el?.scrollIntoView({ behavior: "smooth" })
+  }, [allMessages])
 
   return (
     <>
@@ -40,64 +53,84 @@ const ChatView: React.FC<Props> = (props) => {
       ) : isPending ? (
         <ChatLoader />
       ) : (
-        <div className="h-full overflow-y-auto px-4 py-6 bg-white">
-          <div className="max-w-3xl mx-auto space-y-4">
-            {(allMessages ?? []).map((msg: IChatMessageResponseBody) => {
-              const isUser = msg.sender === "USER"
+        <>
+          {isSendingMessage && (
+            <div className="flex justify-start">
+              <div className="max-w-3xl mx-auto space-y-4">
+                <MessageLoader />
+              </div>
+            </div>
+          )}
 
-              return (
-                <div
-                  key={msg.id}
-                  className={`w-full  flex ${
-                    isUser ? "justify-end" : "justify-start"
-                  }`}
-                >
+          <div className="h-full overflow-y-auto px-4 py-6 bg-white">
+            <div className="max-w-3xl mx-auto space-y-4">
+              {(allMessages ?? []).map((msg: IChatMessageResponseBody) => {
+                const isUser = msg.sender === "USER"
+
+                return (
                   <div
-                    className={`flex group flex-col max-w-[75%] ${
-                      isUser ? "items-end" : "items-start"
+                    key={msg.id}
+                    className={`w-full  flex ${
+                      isUser ? "justify-end" : "justify-start"
                     }`}
                   >
-                    {/* Message Bubble */}
                     <div
-                      className={`px-4 py-2 rounded-xl text-sm shadow ${
-                        isUser
-                          ? "bg-blue-500 text-white rounded-br-none"
-                          : "bg-gray-100 text-gray-900 rounded-bl-none"
+                      className={`flex group flex-col max-w-[75%] ${
+                        isUser ? "items-end" : "items-start"
                       }`}
                     >
-                      {msg.message}
-                    </div>
+                      {/* Message Bubble */}
 
-                    {/* Icon Row */}
-                    <div
-                      className={`flex gap-3 mt-2 opacity-0 group-hover:opacity-100 transition duration-300 ${
-                        isUser ? "justify-end" : "justify-start"
-                      }`}
-                    >
-                      <Tooltip title="like">
-                        <ThumbsUp className="w-4 h-4 cursor-pointer text-gray-400 hover:text-gray-600" />
-                      </Tooltip>
-                      <Tooltip title="dislike">
-                        <ThumbsDown className="w-4 h-4 cursor-pointer text-gray-400 hover:text-gray-600" />
-                      </Tooltip>
-                      <Tooltip
-                        title="Copy"
-                        onClick={() => {
-                          navigator.clipboard.writeText(msg.message || "")
-                        }}
+                      <div
+                        className={`px-4 py-2 rounded-xl text-sm shadow ${
+                          isUser
+                            ? "bg-blue-500 text-white rounded-br-none"
+                            : "bg-gray-100 text-gray-900 rounded-bl-none"
+                        }`}
                       >
-                        <Copy className="w-4 h-4 cursor-pointer text-gray-400 hover:text-gray-600" />
-                      </Tooltip>
-                      <Tooltip title="Regenerate">
-                        <Recycle className="w-4 h-4 cursor-pointer text-gray-400 hover:text-gray-600" />
-                      </Tooltip>
+                        {msg.message}
+                      </div>
+
+                      {/* Icon Row */}
+                      <div
+                        className={`flex gap-3 mt-2 pl-4 opacity-0 group-hover:opacity-100 transition duration-300 ${
+                          isUser ? "justify-end" : "justify-start"
+                        }`}
+                      >
+                        {!isUser && (
+                          <>
+                            <Tooltip title="like">
+                              <ThumbsUp className="w-4 h-4 cursor-pointer text-gray-400 hover:text-gray-600" />
+                            </Tooltip>
+                            <Tooltip title="dislike">
+                              <ThumbsDown className="w-4 h-4 cursor-pointer text-gray-400 hover:text-gray-600" />
+                            </Tooltip>
+
+                            <Tooltip
+                              title="Copy"
+                              onClick={() => {
+                                navigator.clipboard.writeText(msg.message || "")
+                              }}
+                            >
+                              <Copy className="w-4 h-4 cursor-pointer text-gray-400 hover:text-gray-600" />
+                            </Tooltip>
+                          </>
+                        )}
+                        {/* {isUser && (
+                          <Tooltip title="Regenerate">
+                            <Recycle className="w-4 h-4 cursor-pointer text-gray-400 hover:text-gray-600" />
+                          </Tooltip>
+                        )} */}
+                      </div>
                     </div>
                   </div>
-                </div>
-              )
-            })}
+                )
+              })}
+
+              <span id="chat-scroll-anchor" />
+            </div>
           </div>
-        </div>
+        </>
       )}
     </>
   )

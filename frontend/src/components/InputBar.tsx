@@ -7,7 +7,9 @@ import {
   type SetStateAction,
 } from "react"
 import { useNavigate } from "react-router-dom"
-import { useSpeechRecognition } from "react-speech-recognition"
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition"
 import { useAuth } from "../lib/hooks/useAuth"
 import type { IChatMessageResponseBody } from "../lib/types/chatbot/chatMessage"
 import {
@@ -19,10 +21,17 @@ import MicrophoneModal from "./MicrophoneModal"
 interface Props {
   sessionId?: string
   setOptimisticMessages: Dispatch<SetStateAction<IChatMessageResponseBody[]>>
+  setIsSendingMessage: Dispatch<SetStateAction<boolean>>
+  isSendingMessage: boolean
 }
 
 const InputBar: React.FC<Props> = (props) => {
-  const { sessionId, setOptimisticMessages } = props
+  const {
+    sessionId,
+    setOptimisticMessages,
+    setIsSendingMessage,
+    isSendingMessage,
+  } = props
   const navigate = useNavigate()
 
   const [message, setMessage] = useState("")
@@ -51,15 +60,15 @@ const InputBar: React.FC<Props> = (props) => {
     isMicrophoneAvailable,
   } = useSpeechRecognition()
 
-  const {
-    mutate: sendChatMessage,
-    isPending: isSendingMessage,
-    isSuccess,
-  } = useSendChatMessage()
+  console.log(transcript)
+  console.log(listening)
+
+  const { mutate: sendChatMessage, isSuccess } = useSendChatMessage()
 
   const { mutateAsync: createSession } = useCreateChatSession()
 
   const handleSendChatMessage = async (message: string) => {
+    setIsSendingMessage(true)
     const send = (sessionId: string) => {
       const newMsg = {
         id: Date.now(),
@@ -76,6 +85,7 @@ const InputBar: React.FC<Props> = (props) => {
           onSettled: () => {
             setOptimisticMessages([])
             setMessage("")
+            setIsSendingMessage(false)
           },
         }
       )
@@ -110,10 +120,12 @@ const InputBar: React.FC<Props> = (props) => {
   }
 
   if (!isMicrophoneAvailable) {
+    console.log("enable your microphone")
     return <span>Please enable your microphone to use speech service.</span>
   }
 
   if (!browserSupportsSpeechRecognition) {
+    console.log("browser doesn't support speech recognition")
     return <span>Your browser does not support speech recognition.</span>
   }
 
@@ -124,9 +136,16 @@ const InputBar: React.FC<Props> = (props) => {
     }
   }, [message])
 
+  useEffect(() => {
+    if (!listening && transcript) {
+      setMessage(message)
+      resetTranscript()
+    }
+  }, [listening])
+
   return (
     <>
-      <div className="w-full px-4 pb-6 pt-2 bg-white z-10">
+      <div className="w-full px-4 pb-6 pt-0 bg-white z-10">
         <div className="max-w-3xl mx-auto">
           <div
             className="flex items-center border border-gray-300 rounded-lg px-3 py-3 focus-within:ring-2 focus-within:ring-blue-200"
@@ -163,12 +182,14 @@ const InputBar: React.FC<Props> = (props) => {
             <button
               className="text-blue-500 hover:text-blue-600 hover:bg-gray-200 transition-all duration-100 border border-gray-300 rounded-full p-2"
               aria-label="Mic"
+              disabled={isSendingMessage}
               onClick={() => {
                 setOpenMicroPhone(true)
-                // SpeechRecognition.startListening({
-                //   continuous: true,
-                //   lang: "en-US",
-                // })
+                SpeechRecognition.startListening({
+                  continuous: true,
+                  language: "en-US",
+                })
+                console.log("started")
               }}
             >
               <Mic size={20} />

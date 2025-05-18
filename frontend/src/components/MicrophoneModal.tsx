@@ -8,6 +8,7 @@ import IconButton from "@mui/material/IconButton"
 import { styled } from "@mui/material/styles"
 import { Pause } from "lucide-react"
 import type { Dispatch, SetStateAction } from "react"
+import SpeechRecognition from "react-speech-recognition"
 
 interface Props {
   open: boolean
@@ -51,7 +52,10 @@ export default function MicrophoneModal({
       </DialogTitle>
       <IconButton
         aria-label="close"
-        onClick={onClose}
+        onClick={() => {
+          onClose()
+          SpeechRecognition.abortListening()
+        }}
         sx={(theme) => ({
           position: "absolute",
           right: 16,
@@ -81,8 +85,9 @@ export default function MicrophoneModal({
             onClick={() => {
               onClose()
               setIsClosedMicroPhone(true)
+              SpeechRecognition.stopListening()
+              console.log("stopped")
             }}
-            // onClick={SpeechRecognition.stopListening}
           >
             <Pause size={40} className="cursor-pointer" />
           </button>
@@ -91,7 +96,10 @@ export default function MicrophoneModal({
 
       <DialogActions>
         <Button
-          onClick={onClose}
+          onClick={() => {
+            onClose()
+            SpeechRecognition.abortListening()
+          }}
           variant="contained"
           sx={{
             backgroundColor: "#1e293b",

@@ -53,7 +53,7 @@ const Login = () => {
       <Box
         sx={{
           flex: 1,
-          backgroundImage: "url(/assets/chatbot.jpg)",
+          backgroundImage: "url(/assets/educhat-logo.svg)",
           backgroundSize: "cover",
           backgroundPosition: "center",
           minHeight: { xs: 200, md: "100%" },
@@ -97,7 +97,7 @@ const Login = () => {
                 <SmartToyIcon sx={{ fontSize: 36, color: "#764ba2" }} />
               </Avatar>
               <Typography variant="h5" mt={2}>
-                Chatbot Login
+                Login
               </Typography>
               <Typography variant="body2" color="#ddd">
                 Sign in to start chatting!

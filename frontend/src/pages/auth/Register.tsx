@@ -58,7 +58,7 @@ const Register = () => {
       <Box
         sx={{
           flex: 1,
-          backgroundImage: "url(/assets/chatbot.jpg)",
+          backgroundImage: "url(/assets/educhat-logo.svg)",
           backgroundSize: "cover",
           backgroundPosition: "center",
           minHeight: { xs: 200, md: "100%" },
@@ -105,7 +105,7 @@ const Register = () => {
                 Create Account
               </Typography>
               <Typography variant="body2" color="#ddd">
-                Sign up to get started with Chatbot
+                Sign up to get started with EduChat
               </Typography>
             </Box>
 

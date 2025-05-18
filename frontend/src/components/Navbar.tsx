@@ -21,7 +21,7 @@ const Navbar = () => {
       {/* Logo and Title */}
       <div
         className="flex gap-1 items-center cursor-pointer"
-        onClick={() => (window.location.href = "/")}
+        onClick={() => navigate("/", { replace: true })}
       >
         <img src="/assets/educhat-logo.svg" alt="Logo" className="h-10 w-10" />
         <p className="text-lg font-semibold">EduChat</p>
@@ -31,6 +31,9 @@ const Navbar = () => {
       <div className="relative">
         <button
           onClick={toggleMenu}
+          onBlur={() => {
+            setMenuOpen(false)
+          }}
           className="px-4 py-2 rounded-md transition-all duration-300 cursor-pointer"
         >
           <img src="assets/menu.svg" alt="menu" className="w-6 h-6" />
