@@ -181,9 +181,9 @@ const Sidebar = () => {
 
   return (
     <>
-      <section className="w-full h-full bg-gray-100 p-4">
+      <section className="w-full h-full p-4 overscroll-y-auto">
         <div className="flex flex-col gap-1 text-gray-800">
-          <div className="relative group mb-2">
+          <div className="sticky group mb-2">
             <button
               className="w-full flex items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white font-semibold rounded-2xl shadow-md hover:scale-[1.02] hover:shadow-lg transition-transform duration-200 ease-in-out"
               onClick={() => {

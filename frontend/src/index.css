@@ -77,3 +77,26 @@ body {
   height: 100%;
   /* overflow: hidden; */
 }
+
+.auto-scrollbar::-webkit-scrollbar {
+  width: 3px;
+  background-color: "blue";
+}
+
+.scrollbar-hover:hover::-webkit-scrollbar {
+  width: 4px; /* Thin scrollbar */
+}
+
+.auto-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+}
+
+.normal-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.normal-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 4px;
+}

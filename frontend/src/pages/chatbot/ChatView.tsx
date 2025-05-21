@@ -13,6 +13,7 @@ interface Props {
   sessionId: string
   setOptimisticMessages: Dispatch<SetStateAction<IChatMessageResponseBody[]>>
   isSendingMessage: boolean
+  setIsSendingMessage: Dispatch<SetStateAction<boolean>>
 }
 
 const ChatView: React.FC<Props> = (props) => {
@@ -20,6 +21,7 @@ const ChatView: React.FC<Props> = (props) => {
     optimisticMessages,
     sessionId,
     setOptimisticMessages,
+    setIsSendingMessage,
     isSendingMessage,
   } = props
   console.log(sessionId)
@@ -47,22 +49,26 @@ const ChatView: React.FC<Props> = (props) => {
       {sessionId && allMessages.length === 0 ? (
         <div className="flex flex-col h-full">
           <div className="my-auto">
-            <InitialChatView setOptimisticMessages={setOptimisticMessages} />
+            <InitialChatView
+              setOptimisticMessages={setOptimisticMessages}
+              setIsSendingMessage={setIsSendingMessage}
+              isSendingMessage={isSendingMessage}
+            />
           </div>
         </div>
       ) : isPending ? (
         <ChatLoader />
       ) : (
         <>
-          {isSendingMessage && (
-            <div className="flex justify-start">
-              <div className="max-w-3xl mx-auto space-y-4">
-                <MessageLoader />
-              </div>
-            </div>
-          )}
-
           <div className="h-full overflow-y-auto px-4 py-6 bg-white">
+            {isSendingMessage && (
+              <div className="flex justify-start">
+                <div className="max-w-3xl mx-auto space-y-4">
+                  <MessageLoader />
+                </div>
+              </div>
+            )}
+
             <div className="max-w-3xl mx-auto space-y-4">
               {(allMessages ?? []).map((msg: IChatMessageResponseBody) => {
                 const isUser = msg.sender === "USER"

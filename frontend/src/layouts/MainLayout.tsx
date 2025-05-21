@@ -12,10 +12,10 @@ const MainLayout = () => {
     <main className="flex flex-col h-screen overflow-hidden">
       <Navbar />
       <div className="flex flex-1 overflow-hidden">
-        <div className="w-84">
+        <div className="auto-scrollbar w-84 overflow-y-auto bg-gray-100 ">
           <Sidebar />
         </div>
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 overflow-hidden normal-scrollbar">
           <Outlet />
         </div>
       </div>

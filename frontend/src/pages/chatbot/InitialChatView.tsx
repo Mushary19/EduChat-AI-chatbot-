@@ -4,9 +4,15 @@ import type { IChatMessageResponseBody } from "../../lib/types/chatbot/chatMessa
 
 interface Props {
   setOptimisticMessages: Dispatch<SetStateAction<IChatMessageResponseBody[]>>
+  setIsSendingMessage: Dispatch<SetStateAction<boolean>>
+  isSendingMessage: boolean
 }
 
-const InitialChatView: React.FC<Props> = ({ setOptimisticMessages }) => {
+const InitialChatView: React.FC<Props> = ({
+  setOptimisticMessages,
+  setIsSendingMessage,
+  isSendingMessage,
+}) => {
   return (
     <div className="flex-1 flex-col items-center justify-center bg-white text-center px-4">
       <div>
@@ -18,8 +24,12 @@ const InitialChatView: React.FC<Props> = ({ setOptimisticMessages }) => {
           conversation.
         </p>
       </div>
-      <div>
-        <InputBar setOptimisticMessages={setOptimisticMessages} />
+      <div className="mt-3">
+        <InputBar
+          setOptimisticMessages={setOptimisticMessages}
+          setIsSendingMessage={setIsSendingMessage}
+          isSendingMessage={isSendingMessage}
+        />
       </div>
     </div>
   )

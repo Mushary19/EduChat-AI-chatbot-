@@ -22,7 +22,11 @@ const Chatbot = () => {
     <div className="flex flex-col h-full">
       {!sessionId ? (
         <div className="my-auto">
-          <InitialChatView setOptimisticMessages={setOptimisticMessages} />
+          <InitialChatView
+            setOptimisticMessages={setOptimisticMessages}
+            setIsSendingMessage={setIsSendingMessage}
+            isSendingMessage={isSendingMessage}
+          />
         </div>
       ) : (
         <>
@@ -32,6 +36,7 @@ const Chatbot = () => {
               sessionId={sessionId ?? ""}
               setOptimisticMessages={setOptimisticMessages}
               isSendingMessage={isSendingMessage}
+              setIsSendingMessage={setIsSendingMessage}
             />
           </div>
           <InputBar
