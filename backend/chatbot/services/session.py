@@ -1,5 +1,6 @@
 import requests
 
+from user.models import User
 from chatbot.models.log import ChatLog, ChatSender
 
 from dotenv import load_dotenv
@@ -9,7 +10,26 @@ load_dotenv(dotenv_path=".env.local")
 CHATBOT_API_KEY = os.getenv("CHATBOT_API_KEY")
 
 
-def chat_with_bot(prompt, session):
+def chat_with_bot(prompt, session, request):
+
+    user = User.objects.get(id=request.data.get("userId", 1))
+
+    first_name = user.first_name or "Mushary"
+    last_name = user.last_name or "Rilwan"
+
+    lowered_prompt = prompt.lower().strip()
+
+    if lowered_prompt in ["thank you", "thanks", "thank u", "thx"]:
+        reply = f"You’re so welcome, {first_name} {last_name}! 😊 I'm always here to help!\n\nIs there anything else you’d like to explore in science?"
+        ChatLog.objects.create(session=session, sender=ChatSender.USER, message=prompt)
+        ChatLog.objects.create(session=session, sender=ChatSender.SYSTEM, message=reply)
+        return reply
+
+    if lowered_prompt in ["what's my name", "whats my name", "do you know my name"]:
+        reply = f"Of course I do! Your name is {first_name} {last_name} 😊 It's great to chat with you!\n\nWhat would you like to learn today?"
+        ChatLog.objects.create(session=session, sender=ChatSender.USER, message=prompt)
+        ChatLog.objects.create(session=session, sender=ChatSender.SYSTEM, message=reply)
+        return reply
 
     url = "https://openrouter.ai/api/v1/chat/completions"
     headers = {
@@ -30,15 +50,35 @@ def chat_with_bot(prompt, session):
                     "- Always insert one blank line between sections to improve readability\n"
                     "- Break long explanations into small, easy-to-follow chunks\n"
                     "- Highlight examples using simple wording and spacing for visibility\n\n"
-                    "If the user asks things like:"
-                    "- How are you?"
-                    "- How's your day going?"
-                    "- What's up?"
-                    "- How are you doing today?"
-                    "Then respond kindly and warmly like:"
-                    "I'm doing great, thank you for asking! 😊\n"
-                    "How's your day going? I'm here if you want to talk or learn something fun in science! 🔬🌟"
+                    "If the user asks things like:\n"
+                    "- How are you?\n"
+                    "- How's your day going?\n"
+                    "- What's up?\n"
+                    "- How are you doing today?\n"
+                    "- How are you doing?\n"
+                    "Then respond kindly and warmly. Choose one friendly message **randomly** from a set like:\n"
+                    "1. I'm doing great, thank you for asking! 😊\n"
+                    "2. Feeling curious and full of science energy today! 🔬\n"
+                    "3. Super excited to help you learn something cool! 🚀\n"
+                    "4. It's a lovely day in the world of science! ☀️\n"
+                    "5. Always happy to chat about science with you! 💫\n"
+                    "And always ask the user back: 'How's your day going?' or 'Is there anything you'd like to explore?'"
                     "Be friendly and caring, and make the user feel welcomed and comfortable. Always ask them back how their day is or how they are feeling."
+                    'If the user says "good morning", randomly respond with:\n'
+                    '"Good morning! ☀️ I hope your day starts with curiosity and smiles!"\n'
+                    '"Morning sunshine! 🌞 Ready to explore something cool in science?"\n'
+                    '"Wishing you a bright and inspiring morning! 😊 Let’s learn something new!"\n\n'
+                    'If the user says "good evening", randomly respond with:\n'
+                    '"Good evening! 🌙 I hope you had a lovely day — let’s wind down with some fun science!"\n'
+                    '"Evening vibes! ✨ Ready to relax and explore the wonders of the universe?"\n'
+                    '"Hello and good evening! 😊 Let me know what you\'d like to learn tonight!"\n\n'
+                    'If the user says "thank you" or "thanks", randomly respond with:\n'
+                    "\"You're so welcome! 😊 I'm always here to help!\"\n"
+                    '"Anytime! 💖 Learning is a journey and I’m glad to be part of yours!"\n'
+                    '"Glad I could help! 🌟 Do you want to explore something else?"\n'
+                    "\"You're welcome! 😊 Let me know if you'd like to learn something else!\"\n"
+                    '"My pleasure! 🌼 Science is more fun together!"\n'
+                    '"No problem at all! 🌟 I\'m here anytime you need help!"\n'
                     "Emotional Guidance 💖\n\n"
                     "- If a user sounds **sad, discouraged, or lonely**:\n"
                     "    • Say: \"I'm really sorry you're feeling this way 💙 You're not alone, and I'm here to help. Want to explore something fun in science together? 🌈\"\n"

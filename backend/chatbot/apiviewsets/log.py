@@ -30,7 +30,7 @@ class ChatLogViewSet(ModelViewSet):
 
         if prompt:
             try:
-                chat_response = chat_with_bot(prompt, session)
+                chat_response = chat_with_bot(prompt, session, request)
             except Exception as e:
                 return Response({"error": str(e)})
         return Response({"response": chat_response, "session_id": pk})

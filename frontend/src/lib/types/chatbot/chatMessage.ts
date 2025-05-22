@@ -10,6 +10,7 @@ export interface IChatMessageResponseBody {
 
 export interface IChatMessageBody {
   prompt: string
+  userId: number
 }
 
 export interface IChatMessageResponse {

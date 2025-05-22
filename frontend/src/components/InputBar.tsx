@@ -80,7 +80,7 @@ const InputBar: React.FC<Props> = (props) => {
       setOptimisticMessages((prev) => [...prev, newMsg])
 
       sendChatMessage(
-        { sessionId, prompt: message },
+        { sessionId, prompt: message, userId: user?.id ?? 0 },
         {
           onSettled: () => {
             setOptimisticMessages([])
@@ -138,8 +138,8 @@ const InputBar: React.FC<Props> = (props) => {
 
   useEffect(() => {
     if (!listening && transcript) {
-      setMessage(message)
-      // resetTranscript()
+      setMessage(transcript)
+      resetTranscript()
     }
   }, [listening])
 
