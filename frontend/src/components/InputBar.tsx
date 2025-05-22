@@ -139,7 +139,7 @@ const InputBar: React.FC<Props> = (props) => {
   useEffect(() => {
     if (!listening && transcript) {
       setMessage(message)
-      resetTranscript()
+      // resetTranscript()
     }
   }, [listening])
 
