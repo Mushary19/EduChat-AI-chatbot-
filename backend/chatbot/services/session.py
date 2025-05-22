@@ -33,7 +33,7 @@ def chat_with_bot(prompt, session, request):
 
     url = "https://openrouter.ai/api/v1/chat/completions"
     headers = {
-        "Authorization": f"Bearer ***REMOVED***",
+        "Authorization": f"Bearer {CHATBOT_API_KEY}",
         "Content-Type": "application/json",
     }
     data = {
