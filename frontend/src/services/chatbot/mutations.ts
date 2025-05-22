@@ -25,10 +25,12 @@ export const useSendChatMessage = () => {
     mutationFn: ({
       sessionId,
       prompt,
+      userId,
     }: {
       sessionId: string
       prompt: string
-    }) => sendChatMessage(`/chatbot/${sessionId}/chat/`, { prompt }),
+      userId: number
+    }) => sendChatMessage(`/chatbot/${sessionId}/chat/`, { prompt, userId }),
     onSuccess: (data: IChatMessageResponse) => {
       queryClient.invalidateQueries({
         queryKey: [ChatbotKey.CHATMESSAGE, data.session_id],
