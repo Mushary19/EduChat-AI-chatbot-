@@ -9,6 +9,7 @@ import type { IChatSession } from "../lib/types/chatbot/chatSession"
 import {
   useCreateChatSession,
   useDeleteChatSession,
+  useUpdateSessionTitle,
 } from "../services/chatbot/mutations"
 import { useLoadChatSessions } from "../services/chatbot/queries"
 import ConfirmDelete from "./ConfirmDelete"
@@ -45,6 +46,8 @@ const ChatSessionItem = ({
 
   const toggleDelete = () => setOpenDelete((prev) => !prev)
 
+  const { mutate: updateSessionTitle } = useUpdateSessionTitle()
+
   return (
     <div
       key={session.id}
@@ -54,7 +57,7 @@ const ChatSessionItem = ({
       }`}
     >
       <input
-        value={!isEditing ? `${updatedTitle.substring(0, 20)}` : updatedTitle}
+        value={!isEditing ? `${updatedTitle.substring(0, 25)}` : updatedTitle}
         ref={titleRef}
         readOnly={!isEditing}
         onClick={(e) => {
@@ -68,8 +71,22 @@ const ChatSessionItem = ({
         onBlur={() => {
           setIsEditing(false)
         }}
-        // onKeyDown={() => {
-        // }}
+        onKeyDown={(e) => {
+          // e.preventDefault()
+          if (e.key === "Enter") {
+            updateSessionTitle(
+              {
+                sessionId: session.session_id,
+                title: updatedTitle,
+              },
+              {
+                onSettled: () => {
+                  setIsEditing(false)
+                },
+              }
+            )
+          }
+        }}
       />
       <button
         onClick={(e) => {

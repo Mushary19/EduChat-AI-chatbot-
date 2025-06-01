@@ -17,3 +17,8 @@ export interface IChatMessageResponse {
   response?: string
   session_id: string
 }
+
+export interface IChatMessageUpdateBody {
+  id: number
+  is_liked: boolean
+}
