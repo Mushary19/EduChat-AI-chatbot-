@@ -15,4 +15,5 @@ export interface IChatSessionBody {
 
 export interface IChatSessionUpdateBody {
   title: string
+  sessionId: string
 }

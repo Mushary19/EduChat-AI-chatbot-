@@ -15,7 +15,7 @@ class ChatLog(BaseModel):
     sender = models.CharField(max_length=20, choices=ChatSender.choices)
     message = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
-    # is_liked = models.BooleanField(default=False)
+    is_liked = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.session.user.email} - {self.message}"

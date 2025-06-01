@@ -5,6 +5,7 @@ import ChatLoader from "../../components/ChatLoader"
 import MessageLoader from "../../components/MessageLoader"
 import { useAuth } from "../../lib/hooks/useAuth"
 import type { IChatMessageResponseBody } from "../../lib/types/chatbot/chatMessage"
+import { useLikeChatMessage } from "../../services/chatbot/mutations"
 import { useLoadChatMessagesBySessionId } from "../../services/chatbot/queries"
 import InitialChatView from "./InitialChatView"
 
@@ -38,6 +39,8 @@ const ChatView: React.FC<Props> = (props) => {
   console.log(optimisticMessages)
 
   console.log(isSendingMessage, "sending message")
+
+  const { mutate: likeMessage } = useLikeChatMessage()
 
   useEffect(() => {
     const el = document.querySelector("#chat-scroll-anchor")
@@ -105,7 +108,12 @@ const ChatView: React.FC<Props> = (props) => {
                       >
                         {!isUser && (
                           <>
-                            <Tooltip title="like">
+                            <Tooltip
+                              title="like"
+                              onClick={() =>
+                                likeMessage({ id: msg.id, is_liked: true })
+                              }
+                            >
                               <ThumbsUp className="w-4 h-4 cursor-pointer text-gray-400 hover:text-gray-600" />
                             </Tooltip>
                             <Tooltip title="dislike">
