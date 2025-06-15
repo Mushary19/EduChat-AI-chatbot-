@@ -145,7 +145,7 @@ const InputBar: React.FC<Props> = (props) => {
 
   return (
     <>
-      <div className="w-full px-4 pb-6 pt-0 bg-white z-10">
+      <div className="w-full px-4 pb-6 pt-0bg-white bg-white z-10">
         <div className="max-w-3xl mx-auto">
           <div
             className="flex items-center border border-gray-300 rounded-lg px-3 py-3 focus-within:ring-2 focus-within:ring-blue-200"

@@ -2,64 +2,133 @@ import { useState } from "react"
 import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { logoutSuccess } from "../features/user/userSlice"
+import { Box, Typography, Menu, MenuItem, IconButton, Avatar } from "@mui/material"
+import MenuIcon from "@mui/icons-material/Menu"
+import LogoutIcon from "@mui/icons-material/Logout"
+import SettingsIcon from "@mui/icons-material/Settings"
+import AccountCircleIcon from "@mui/icons-material/AccountCircle"
 
 const Navbar = () => {
-  const [menuOpen, setMenuOpen] = useState(false)
-
-  const toggleMenu = () => setMenuOpen((prev) => !prev)
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const open = Boolean(anchorEl)
   const navigate = useNavigate()
-
   const dispatch = useDispatch()
 
+  const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handleMenuClose = () => {
+    setAnchorEl(null)
+  }
+
   const handleLogout = () => {
+    handleMenuClose()
     dispatch(logoutSuccess())
     navigate("/auth/login/")
   }
 
   return (
-    <div className="flex w-full justify-between items-center px-6 py-4 bg-gray-300 shadow-md">
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        px: 4,
+        py: 2,
+        bgcolor: "background.paper",
+        boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+        zIndex: 1100,
+        position: "relative"
+      }}
+    >
       {/* Logo and Title */}
-      <div
-        className="flex gap-1 items-center cursor-pointer"
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: 2,
+          cursor: "pointer",
+          "&:hover": {
+            opacity: 0.8
+          }
+        }}
         onClick={() => navigate("/", { replace: true })}
       >
-        <img src="/assets/educhat-logo.svg" alt="Logo" className="h-10 w-10" />
-        <p className="text-lg font-semibold">EduChat</p>
-      </div>
+        <Avatar
+          src="/assets/educhat-logo.svg"
+          alt="EduChat Logo"
+          sx={{ width: 40, height: 40 }}
+        />
+        <Typography
+          variant="h6"
+          sx={{
+            fontWeight: 700,
+            background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent"
+          }}
+        >
+          EduChat
+        </Typography>
+      </Box>
 
       {/* Menu Button */}
-      <div className="relative">
-        <button
-          onClick={toggleMenu}
-          onBlur={() => {
-            setMenuOpen(false)
+      <Box>
+        <IconButton
+          onClick={handleMenuOpen}
+          sx={{
+            color: "text.primary",
+            "&:hover": {
+              backgroundColor: "rgba(0, 0, 0, 0.04)"
+            }
           }}
-          className="px-4 py-2 rounded-md transition-all duration-300 cursor-pointer"
         >
-          <img src="assets/menu.svg" alt="menu" className="w-6 h-6" />
-        </button>
+          <MenuIcon />
+        </IconButton>
 
         {/* Dropdown Menu */}
-        {menuOpen && (
-          <div className="absolute right-0 mt-2 w-40 bg-white border rounded-md shadow-lg z-10 p-2">
-            <ul className="text-sm">
-              <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                Profile
-              </li>
-              <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                Settings
-              </li>
-              <li
-                className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                onClick={() => handleLogout()}
-              >
-                Logout
-              </li>
-            </ul>
-          </div>
-        )}
-      </div>
-    </div>
+        <Menu
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleMenuClose}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right"
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "right"
+          }}
+          PaperProps={{
+            sx: {
+              mt: 1.5,
+              minWidth: 200,
+              borderRadius: 2,
+              boxShadow: "0 4px 20px rgba(0,0,0,0.12)",
+              "& .MuiMenuItem-root": {
+                px: 2,
+                py: 1.5,
+                typography: "body2"
+              }
+            }
+          }}
+        >
+          <MenuItem onClick={() => { navigate("/profile"); handleMenuClose() }}>
+            <AccountCircleIcon sx={{ mr: 1.5, fontSize: 20 }} />
+            Profile
+          </MenuItem>
+          <MenuItem onClick={() => { navigate("/settings"); handleMenuClose() }}>
+            <SettingsIcon sx={{ mr: 1.5, fontSize: 20 }} />
+            Settings
+          </MenuItem>
+          <MenuItem onClick={handleLogout} sx={{ color: "error.main" }}>
+            <LogoutIcon sx={{ mr: 1.5, fontSize: 20 }} />
+            Logout
+          </MenuItem>
+        </Menu>
+      </Box>
+    </Box>
   )
 }
 
