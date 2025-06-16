@@ -1,6 +1,8 @@
 import type { Dispatch, SetStateAction } from "react"
 import InputBar from "../../components/InputBar"
 import type { IChatMessageResponseBody } from "../../lib/types/chatbot/chatMessage"
+import { Sparkles } from "lucide-react" // optional icon
+import { motion } from "framer-motion"
 
 interface Props {
   setOptimisticMessages: Dispatch<SetStateAction<IChatMessageResponseBody[]>>
@@ -14,23 +16,38 @@ const InitialChatView: React.FC<Props> = ({
   isSendingMessage,
 }) => {
   return (
-    <div className="flex-1 flex-col items-center justify-center bg-white text-center px-4">
-      <div>
-        <h2 className="text-4xl font-semibold text-gray-700">
-          Welcome to EduChat!
-        </h2>
-        <p className="text-gray-500 text-lg mt-2">
-          Please select a session from the sidebar to view or continue the
-          conversation.
+    <div className="flex flex-col items-center justify-center h-full text-center  px-4">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="space-y-4"
+      >
+        <div className="flex items-center justify-center gap-3">
+          <Sparkles className="w-8 h-8 text-indigo-500 animate-pulse" />
+          <h2 className="text-4xl font-extrabold text-gray-800 tracking-tight">
+            Welcome to <span className="text-indigo-600">EduChat</span>!
+          </h2>
+        </div>
+
+        <p className="text-gray-600 text-lg max-w-xl mx-auto leading-relaxed">
+          Select a session from the sidebar or start a new one. I’m here to help
+          you with your questions, studies, or anything you need.
         </p>
-      </div>
-      <div className="mt-3">
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        className="mt-6 w-full max-w-2xl"
+      >
         <InputBar
           setOptimisticMessages={setOptimisticMessages}
           setIsSendingMessage={setIsSendingMessage}
           isSendingMessage={isSendingMessage}
         />
-      </div>
+      </motion.div>
     </div>
   )
 }

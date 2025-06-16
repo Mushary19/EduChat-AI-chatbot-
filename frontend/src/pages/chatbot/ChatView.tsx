@@ -50,7 +50,7 @@ const ChatView: React.FC<Props> = (props) => {
   return (
     <>
       {sessionId && allMessages.length === 0 ? (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full ">
           <div className="my-auto">
             <InitialChatView
               setOptimisticMessages={setOptimisticMessages}
@@ -63,7 +63,7 @@ const ChatView: React.FC<Props> = (props) => {
         <ChatLoader />
       ) : (
         <>
-          <div className="h-full overflow-y-auto px-4 py-6 bg-white">
+          <div className="h-full overflow-y-auto px-4 py-6 bg-white ">
             {isSendingMessage && (
               <div className="flex justify-start">
                 <div className="max-w-3xl mx-auto space-y-4">

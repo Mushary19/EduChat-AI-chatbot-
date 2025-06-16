@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv(dotenv_path=".env.local")
-CHATBOT_API_KEY = os.getenv("CHATBOT_API_KEY")
+CHATBOT_API_KEY = os.getenv("***REMOVED***")
 
 
 def chat_with_bot(prompt, session, request):
@@ -33,7 +33,7 @@ def chat_with_bot(prompt, session, request):
 
     url = "https://openrouter.ai/api/v1/chat/completions"
     headers = {
-        "Authorization": f"Bearer {CHATBOT_API_KEY}",
+        "Authorization": f"Bearer ***REMOVED***",
         "Content-Type": "application/json",
     }
     data = {

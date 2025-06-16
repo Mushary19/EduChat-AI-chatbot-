@@ -53,7 +53,7 @@ const ChatSessionItem = ({
       key={session.id}
       onClick={() => onSelect(session.session_id)}
       className={`flex px-4 py-2 gap-3 rounded-2xl justify-between items-center group cursor-pointer transition duration-200 ${
-        isSelected ? "bg-gray-300" : "hover:bg-gray-200"
+        isSelected ? "bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-200" : "hover:bg-indigo-200"
       }`}
     >
       <input
@@ -115,10 +115,10 @@ const ChatSessionItem = ({
           },
         }}
       >
-        <div className="bg-white rounded-xl p-2">
-          <ul className="text-sm text-gray-700">
+        <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-xl p-2">
+          <ul className="text-sm text-white hover:text-black">
             <li
-              className="flex justify-between items-center px-4 py-2 rounded-lg hover:bg-gray-100 cursor-pointer transition"
+              className="flex justify-between items-center px-4 py-2 rounded-lg hover:bg-white  cursor-pointer transition"
               onClick={() => {
                 // Handle rename
                 handleClose()
@@ -132,7 +132,7 @@ const ChatSessionItem = ({
               <DriveFileRenameOutlineIcon fontSize="small" />
             </li>
             <li
-              className="flex justify-between items-center px-4 py-2 rounded-lg hover:bg-gray-100 cursor-pointer transition"
+              className="flex justify-between items-center px-4 py-2 rounded-lg hover:bg-white cursor-pointer transition"
               onClick={() => {
                 setOpenDelete(true)
                 handleClose()
