@@ -1,8 +1,8 @@
+import { motion } from "framer-motion"
+import { Sparkles } from "lucide-react" // optional icon
 import type { Dispatch, SetStateAction } from "react"
 import InputBar from "../../components/InputBar"
 import type { IChatMessageResponseBody } from "../../lib/types/chatbot/chatMessage"
-import { Sparkles } from "lucide-react" // optional icon
-import { motion } from "framer-motion"
 
 interface Props {
   setOptimisticMessages: Dispatch<SetStateAction<IChatMessageResponseBody[]>>
@@ -16,7 +16,7 @@ const InitialChatView: React.FC<Props> = ({
   isSendingMessage,
 }) => {
   return (
-    <div className="flex flex-col items-center justify-center h-full text-center  px-4">
+    <div className="flex flex-col items-center justify-center h-full text-center px-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

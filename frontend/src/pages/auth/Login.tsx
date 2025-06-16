@@ -1,7 +1,4 @@
-import SmartToyIcon from "@mui/icons-material/SmartToy";
-import BubbleChartIcon from "@mui/icons-material/BubbleChart";
 import {
-  Avatar,
   Box,
   Button,
   Card,
@@ -9,16 +6,16 @@ import {
   TextField,
   Typography,
   useTheme,
-} from "@mui/material";
-import { useEffect } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { useLogin } from "../../services/auth/mutations";
+} from "@mui/material"
+import { useEffect } from "react"
+import { Controller, useForm } from "react-hook-form"
+import { useNavigate } from "react-router-dom"
+import { useLogin } from "../../services/auth/mutations"
 
 const Login = () => {
-  const theme = useTheme();
-  const navigate = useNavigate();
-  const { mutate: login, isPending, isSuccess } = useLogin();
+  const theme = useTheme()
+  const navigate = useNavigate()
+  const { mutate: login, isPending, isSuccess } = useLogin()
 
   const {
     control,
@@ -30,20 +27,18 @@ const Login = () => {
       email: "",
       password: "",
     },
-  });
+  })
 
   const onSubmit = (data: any) => {
-    login(data);
-  };
+    login(data)
+  }
 
   useEffect(() => {
     if (isSuccess) {
-      navigate("/");
-      reset();
+      navigate("/")
+      reset()
     }
-  }, [isSuccess]);
-
-  const chatbotMessage = "Welcome back! Ready to continue learning?";
+  }, [isSuccess])
 
   return (
     <Box
@@ -107,7 +102,6 @@ const Login = () => {
             px: 4,
           }}
         >
-          
           <Box
             component="img"
             src="/assets/educhat-logo.svg"
@@ -127,35 +121,6 @@ const Login = () => {
         </Box>
 
         <CardContent sx={{ p: 4, pt: 0 }}>
-          {/* Chatbot Message Bubble */}
-          <Box
-            sx={{
-              bgcolor: theme.palette.primary.main,
-              color: "white",
-              p: 2,
-              borderRadius: "18px 18px 18px 4px",
-              mb: 3,
-              position: "relative",
-              maxWidth: "80%",
-              animation: "fadeIn 0.5s ease-out",
-              "@keyframes fadeIn": {
-                "0%": { opacity: 0, transform: "translateY(10px)" },
-                "100%": { opacity: 1, transform: "translateY(0)" },
-              },
-            }}
-          >
-            <Typography>{chatbotMessage}</Typography>
-            <BubbleChartIcon
-              sx={{
-                position: "absolute",
-                right: -10,
-                bottom: -10,
-                fontSize: 24,
-                color: theme.palette.primary.main,
-              }}
-            />
-          </Box>
-
           <form onSubmit={handleSubmit(onSubmit)} noValidate>
             <Controller
               name="email"
@@ -271,7 +236,7 @@ const Login = () => {
             New to EduChat?{" "}
             <Box
               component="span"
-              onClick={() => navigate("register")}
+              onClick={() => navigate("/auth/register/")}
               sx={{
                 color: theme.palette.primary.main,
                 cursor: "pointer",
@@ -287,7 +252,7 @@ const Login = () => {
         </CardContent>
       </Card>
     </Box>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login
