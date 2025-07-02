@@ -74,24 +74,20 @@ const Navbar = () => {
               },
             }}
           >
-            <MenuIcon />
+            <MenuIcon className="text-gray-500" />
           </IconButton>
 
           {/* Center - Session Title */}
           <Typography
-            variant="subtitle1"
-            fontWeight={600}
+            variant="h6"
             sx={{
-              textAlign: "center",
-              flex: 1,
-              ml: 2,
-              mr: 2,
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
+              fontWeight: 700,
+              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
             }}
           >
-            Math Class
+            EduChat
           </Typography>
 
           {/* Right - Add Session Icon */}

@@ -16,7 +16,7 @@ const InitialChatView: React.FC<Props> = ({
   isSendingMessage,
 }) => {
   return (
-    <div className="flex flex-col items-center justify-center h-full text-center px-4">
+    <div className="flex flex-col items-center justify-center h-full text-center lg:px-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -25,12 +25,12 @@ const InitialChatView: React.FC<Props> = ({
       >
         <div className="flex items-center justify-center gap-3">
           <Sparkles className="w-8 h-8 text-indigo-500 animate-pulse" />
-          <h2 className="text-4xl font-extrabold text-gray-800 tracking-tight">
+          <h2 className="text-3xl md:text-4xl font-extrabold text-gray-800 tracking-tight">
             Welcome to <span className="text-indigo-600">EduChat</span>!
           </h2>
         </div>
 
-        <p className="text-gray-600 text-lg max-w-xl mx-auto leading-relaxed">
+        <p className="text-gray-600  md:text-lg max-w-xl mx-auto leading-relaxed px-3 md:p-0">
           Select a session from the sidebar or start a new one. I’m here to help
           you with your questions, studies, or anything you need.
         </p>

@@ -145,10 +145,10 @@ const InputBar: React.FC<Props> = (props) => {
 
   return (
     <>
-      <div className="w-full px-4 pb-3 lg:pb-6 pt-0bg-white bg-white z-10">
+      <div className="w-full px-4 pb-4 lg:pb-6 pt-0bg-white bg-white z-10">
         <div className="max-w-3xl mx-auto">
           <div
-            className="flex items-center border border-gray-300 rounded-lg px-3 py-3 focus-within:ring-2 focus-within:ring-blue-200"
+            className="flex items-center border border-gray-300 rounded-lg px-3 py-2 md:py-3 focus-within:ring-2 focus-within:ring-blue-200"
             onClick={() => textareaRef.current?.focus()}
           >
             <textarea
@@ -180,7 +180,7 @@ const InputBar: React.FC<Props> = (props) => {
             </button>
           )} */}
             <button
-              className="text-blue-500 hover:text-blue-600 hover:bg-gray-200 transition-all duration-100 border border-gray-300 rounded-full p-2"
+              className="text-blue-500 hover:text-blue-600 hover:bg-gray-200 transition-all duration-100 border border-gray-300 rounded-full p-1 md:p-2"
               aria-label="Mic"
               disabled={isSendingMessage}
               onClick={() => {
@@ -196,7 +196,7 @@ const InputBar: React.FC<Props> = (props) => {
             </button>
             <button
               disabled={trimmedMessage === "" || isSendingMessage}
-              className={`ml-2 text-blue-500 hover:text-blue-600 transition-all duration-100 border border-gray-300 rounded-full p-2 ${
+              className={`ml-2 text-blue-500 hover:text-blue-600 transition-all duration-100 border border-gray-300 rounded-full p-1 md:p-2 ${
                 trimmedMessage === ""
                   ? "opacity-50 cursor-not-allowed"
                   : "hover:bg-gray-200"

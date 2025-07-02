@@ -1,5 +1,6 @@
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined"
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline"
+import { CircularProgress } from "@mui/material"
 import Popover from "@mui/material/Popover"
 import { MoreHorizontal } from "lucide-react"
 import * as React from "react"
@@ -49,114 +50,129 @@ const ChatSessionItem = ({
   const { mutate: updateSessionTitle } = useUpdateSessionTitle()
 
   return (
-    <div
-      key={session.id}
-      onClick={() => onSelect(session.session_id)}
-      className={`flex px-4 py-2 gap-3 rounded-2xl justify-between items-center group cursor-pointer transition duration-200 ${
-        isSelected
-          ? "bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-200"
-          : "hover:bg-indigo-200"
-      }`}
-    >
-      <input
-        value={!isEditing ? `${updatedTitle.substring(0, 25)}` : updatedTitle}
-        ref={titleRef}
-        readOnly={!isEditing}
-        onClick={(e) => {
-          if (!isEditing) return
-          e.stopPropagation()
-        }}
-        className={`bg-transparent outline-none border-none w-full cursor-pointer ${
-          isEditing ? "bg-white px-1 py-0.5 rounded" : ""
+    <>
+      <div
+        key={session.id}
+        onClick={() => onSelect(session.session_id)}
+        className={`flex px-4 py-2 gap-3 rounded-2xl justify-between items-center group cursor-pointer transition duration-200 ${
+          isSelected
+            ? "bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-200"
+            : "hover:bg-indigo-200"
         }`}
-        onChange={(e) => setUpdatedTitle(e.target.value)}
-        onBlur={() => {
-          setIsEditing(false)
-        }}
-        onKeyDown={(e) => {
-          // e.preventDefault()
-          if (e.key === "Enter") {
-            updateSessionTitle(
-              {
-                sessionId: session.session_id,
-                title: updatedTitle,
-              },
-              {
-                onSettled: () => {
-                  setIsEditing(false)
+      >
+        <input
+          value={!isEditing ? `${updatedTitle.substring(0, 25)}` : updatedTitle}
+          ref={titleRef}
+          readOnly={!isEditing}
+          onClick={(e) => {
+            if (!isEditing) return
+            e.stopPropagation()
+          }}
+          className={`bg-transparent outline-none border-none w-full cursor-pointer text-gray-700 ${
+            isEditing ? "bg-white px-1 py-0.5 rounded" : ""
+          }`}
+          onChange={(e) => setUpdatedTitle(e.target.value)}
+          onBlur={() => {
+            setIsEditing(false)
+          }}
+          onKeyDown={(e) => {
+            // e.preventDefault()
+            if (e.key === "Enter") {
+              updateSessionTitle(
+                {
+                  sessionId: session.session_id,
+                  title: updatedTitle,
                 },
-              }
-            )
-          }
-        }}
-      />
-      <button
-        onClick={(e) => {
-          e.stopPropagation()
-          handleClick(e)
-        }}
-        className="opacity-0 group-hover:opacity-100 transition duration-200"
-      >
-        <MoreHorizontal className="cursor-pointer" />
-      </button>
-
-      <Popover
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-        PaperProps={{
-          sx: {
-            borderRadius: 2,
-            boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
-            minWidth: 160,
-          },
-        }}
-      >
-        <div className="rounded-xl p-2" onBlur={handleClose}>
-          <ul className="text-sm text-black">
-            <li
-              className="flex justify-between items-center px-4 py-2 rounded-lg cursor-pointer transition hover:bg-gradient-to-r hover:bg-gray-100"
-              onClick={() => {
-                handleClose()
-                setIsEditing(true)
-                setTimeout(() => {
-                  titleRef?.current?.focus()
-                }, 100)
-              }}
-            >
-              Rename
-              <DriveFileRenameOutlineIcon fontSize="small" />
-            </li>
-            <li
-              className="flex justify-between items-center px-4 py-2 rounded-lg cursor-pointer transition hover:bg-red-400 hover:text-white"
-              onClick={() => {
-                setOpenDelete(true)
-                handleClose()
-              }}
-            >
-              Delete
-              <DeleteOutlineOutlinedIcon fontSize="small" />
-            </li>
-          </ul>
-        </div>
-      </Popover>
-
-      {openDelete && (
-        <ConfirmDelete
-          open={openDelete}
-          onClose={toggleDelete}
-          onConfirm={() => {
-            onDelete(session.session_id)
-            toggleDelete()
+                {
+                  onSettled: () => {
+                    setIsEditing(false)
+                  },
+                }
+              )
+            }
           }}
         />
-      )}
-    </div>
+        <button
+          onClick={(e) => {
+            e.stopPropagation()
+            handleClick(e)
+          }}
+          className="opacity-50 md:opacity-0 md:group-hover:opacity-100 transition duration-200"
+        >
+          <MoreHorizontal className="cursor-pointer" />
+        </button>
+
+        <Popover
+          id={id}
+          open={open}
+          anchorEl={anchorEl}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left",
+          }}
+          PaperProps={{
+            sx: {
+              borderRadius: 2,
+              boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
+              minWidth: 160,
+            },
+          }}
+        >
+          <div className="rounded-xl p-2" onBlur={handleClose}>
+            <ul className="text-sm text-black">
+              <li
+                className="flex justify-between items-center px-4 py-2 rounded-lg cursor-pointer transition hover:bg-gradient-to-r hover:bg-gray-100"
+                onClick={() => {
+                  handleClose()
+                  setIsEditing(true)
+                  setTimeout(() => {
+                    titleRef?.current?.focus()
+                  }, 100)
+                }}
+              >
+                Rename
+                <DriveFileRenameOutlineIcon fontSize="small" />
+              </li>
+              <li
+                className="flex justify-between items-center px-4 py-2 rounded-lg cursor-pointer transition hover:bg-red-400 hover:text-white"
+                onClick={() => {
+                  setOpenDelete(true)
+                  handleClose()
+                }}
+              >
+                Delete
+                <DeleteOutlineOutlinedIcon fontSize="small" />
+              </li>
+            </ul>
+          </div>
+        </Popover>
+
+        {openDelete && (
+          <ConfirmDelete
+            open={openDelete}
+            onClose={toggleDelete}
+            onConfirm={() => {
+              onDelete(session.session_id)
+              toggleDelete()
+            }}
+          />
+        )}
+      </div>
+
+      <div className="hidden flex justify-between fixed bottom-0 bg-gray-400 w-[320px] p-3">
+        <div>Profile</div>
+        <button
+          onClick={(e) => {
+            e.stopPropagation()
+            handleClick(e)
+          }}
+          className="opacity-50 transition duration-200"
+        >
+          <MoreHorizontal className="cursor-pointer" />
+        </button>
+      </div>
+    </>
   )
 }
 
@@ -222,7 +238,7 @@ const Sidebar = () => {
                   d="M12 4v16m8-8H4"
                 />
               </svg>
-              New Chat
+              {isCreatePending ? <CircularProgress /> : "New Chat"}
             </button>
           </div>
 
@@ -235,6 +251,8 @@ const Sidebar = () => {
               onDelete={deleteSession}
             />
           ))}
+
+          <div className="p-1"></div>
         </div>
       </section>
     </>

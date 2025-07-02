@@ -84,17 +84,17 @@ const ChatView: React.FC<Props> = (props) => {
                     }`}
                   >
                     <div
-                      className={`flex group flex-col max-w-[75%] ${
+                      className={`flex group flex-col max-w-[85%] md:max-w-[75%] ${
                         isUser ? "items-end" : "items-start"
                       }`}
                     >
                       {/* Message Bubble */}
 
                       <div
-                        className={`px-4 py-2 rounded-xl text-sm shadow ${
+                        className={`px-4 py-3 rounded-xl text-sm shadow ${
                           isUser
                             ? "bg-blue-500 text-white rounded-br-none"
-                            : "bg-gray-100 text-gray-900 rounded-bl-none"
+                            : "bg-gray-100 text-gray-800 rounded-bl-none"
                         }`}
                       >
                         {msg.message}

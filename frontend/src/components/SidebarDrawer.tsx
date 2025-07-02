@@ -9,7 +9,7 @@ interface Props {
 
 export default function SidebarDrawer({ open, onClose, content }: Props) {
   return (
-    <div className="w-[400px]">
+    <div className="w-[300px]">
       <React.Fragment>
         <Drawer open={open} onClose={onClose}>
           {content}
