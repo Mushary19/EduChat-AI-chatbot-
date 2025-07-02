@@ -67,8 +67,8 @@ export default function MicrophoneModal({
       </IconButton>
 
       <DialogContent dividers>
-        <div className="flex flex-col items-center justify-center gap-6 min-w-[320px] md:min-w-[500px] min-h-[260px]">
-          <p className="text-center text-slate-700 text-2xl font-semibold tracking-wide animate-pulse">
+        <div className="flex flex-col items-center justify-center gap-6 min-w-[300px] md:min-w-[500px] min-h-[260px]">
+          <p className="text-center text-slate-700 text-xl md:text-2xl font-semibold tracking-wide animate-pulse">
             We’re listening to you...
           </p>
 
