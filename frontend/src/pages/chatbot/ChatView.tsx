@@ -63,7 +63,7 @@ const ChatView: React.FC<Props> = (props) => {
         <ChatLoader />
       ) : (
         <>
-          <div className="h-full overflow-y-auto px-4 py-6 bg-white">
+          <div className="h-full overflow-y-auto px-4 pt-6 lg:pb-2 bg-white">
             {isSendingMessage && (
               <div className="flex justify-start">
                 <div className="max-w-3xl mx-auto space-y-4">
