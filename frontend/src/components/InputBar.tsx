@@ -145,10 +145,10 @@ const InputBar: React.FC<Props> = (props) => {
 
   return (
     <>
-      <div className="w-full px-4 pb-4 lg:pb-6 pt-0bg-white bg-white z-10">
+      <div className="w-full px-4 pb-2 lg:pb-6 pt-0bg-white bg-white z-10">
         <div className="max-w-3xl mx-auto">
           <div
-            className="flex items-center border border-gray-300 rounded-lg px-3 py-2 md:py-3 focus-within:ring-2 focus-within:ring-blue-200"
+            className="flex items-center border border-gray-300 rounded-lg px-3 py-4 md:py-3 focus-within:ring-2 focus-within:ring-blue-200"
             onClick={() => textareaRef.current?.focus()}
           >
             <textarea
@@ -157,7 +157,7 @@ const InputBar: React.FC<Props> = (props) => {
               onChange={(e) => setMessage(e.target.value)}
               rows={1}
               placeholder="Type your message..."
-              className="flex-1 max-h-[200px] overflow-y-auto resize-none border-none outline-none text-sm text-gray-800"
+              className="flex-1 max-h-[200px] overflow-y-auto resize-none border-none outline-none text-sm text-gray-600"
               onKeyDown={(e) => {
                 handleKeyEnter(e)
               }}
