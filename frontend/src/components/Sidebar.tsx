@@ -1,6 +1,6 @@
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined"
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline"
-import { CircularProgress } from "@mui/material"
+import { Avatar, CircularProgress } from "@mui/material"
 import Popover from "@mui/material/Popover"
 import { MoreHorizontal } from "lucide-react"
 import * as React from "react"
@@ -160,7 +160,7 @@ const ChatSessionItem = ({
         )}
       </div>
 
-      <div className="hidden flex justify-between fixed bottom-0 bg-gray-400 w-[320px] p-3">
+      {/* <div className="md:hidden flex justify-between fixed bottom-0 bg-gray-400 w-[320px] p-3">
         <div>Profile</div>
         <button
           onClick={(e) => {
@@ -171,7 +171,7 @@ const ChatSessionItem = ({
         >
           <MoreHorizontal className="cursor-pointer" />
         </button>
-      </div>
+      </div> */}
     </>
   )
 }
@@ -215,33 +215,64 @@ const Sidebar = () => {
 
   return (
     <>
-      <section className="w-full h-full p-4 overscroll-y-auto">
-        <div className="flex flex-col gap-1 text-gray-800">
-          <div className="sticky group mb-2">
-            <button
-              className="w-full flex items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white font-semibold rounded-2xl shadow-md hover:scale-[1.02] hover:shadow-lg transition-transform duration-200 ease-in-out"
-              onClick={() => {
-                handleCreateChatSession()
-              }}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 4v16m8-8H4"
-                />
-              </svg>
-              {isCreatePending ? <CircularProgress /> : "New Chat"}
-            </button>
+      <section className="w-full h-full overflow-y-auto pt-35 md:pt-0 bg-white relative">
+        {/* Fixed top section on small devices */}
+        <div className="fixed top-0 left-0 right-0 p-4 bg-white z-10 md:hidden w-[345px]">
+          {/* Profile row */}
+          <div className="flex justify-between items-center px-4 py-1.5 bg-gray-200 rounded-2xl mb-2">
+            <Avatar />
+            <MoreHorizontal />
           </div>
 
+          {/* New Chat Button */}
+          <button
+            className="w-full flex items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white font-semibold rounded-2xl shadow-md hover:scale-[1.02] hover:shadow-lg transition-transform duration-200 ease-in-out"
+            onClick={handleCreateChatSession}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
+            {isCreatePending ? <CircularProgress size={20} /> : "New Chat"}
+          </button>
+        </div>
+
+        {/* Sticky on large screens */}
+        <div className="hidden md:block sticky top-0 z-10 bg-white p-4">
+          <button
+            className="w-full flex items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white font-semibold rounded-2xl shadow-md hover:scale-[1.02] hover:shadow-lg transition-transform duration-200 ease-in-out"
+            onClick={handleCreateChatSession}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
+            {isCreatePending ? <CircularProgress size={20} /> : "New Chat"}
+          </button>
+        </div>
+
+        {/* Chat session list */}
+        <div className="flex flex-col gap-1 text-gray-800 px-4">
           {chatSessions?.map((session) => (
             <ChatSessionItem
               key={session.session_id}
@@ -251,8 +282,7 @@ const Sidebar = () => {
               onDelete={deleteSession}
             />
           ))}
-
-          <div className="p-1"></div>
+          <div className="p-1" />
         </div>
       </section>
     </>
