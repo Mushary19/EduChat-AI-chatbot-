@@ -4,7 +4,6 @@ import MainLayout from "../layouts/MainLayout"
 import Login from "../pages/auth/Login"
 import Register from "../pages/auth/Register"
 import Chatbot from "../pages/chatbot/Chatbot"
-import Demo from "../pages/chatbot/Demo"
 
 const AppRoutes = () => {
   return (
@@ -16,7 +15,6 @@ const AppRoutes = () => {
 
       <Route element={<MainLayout />}>
         <Route path="/" element={<Chatbot />} />
-        <Route path="demo" element={<Demo />} />
       </Route>
     </Routes>
   )

@@ -1,6 +1,11 @@
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined"
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline"
-import { Avatar, CircularProgress } from "@mui/material"
+import {
+  Avatar,
+  CircularProgress,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material"
 import Popover from "@mui/material/Popover"
 import { MoreHorizontal } from "lucide-react"
 import * as React from "react"
@@ -26,12 +31,15 @@ const ChatSessionItem = ({
   onSelect: (id: string) => void
   onDelete: (id: string) => void
 }) => {
+  const theme = useTheme()
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const [openDelete, setOpenDelete] = React.useState<boolean>(false)
   const [isEditing, setIsEditing] = React.useState(false)
   const [updatedTitle, setUpdatedTitle] = React.useState(session.title)
+  const isXsOrSm = useMediaQuery(theme.breakpoints.down("md"))
 
   const titleRef = React.useRef<HTMLInputElement>(null)
+  const touchTimeout = React.useRef<number | null>(null)
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation()
@@ -40,6 +48,21 @@ const ChatSessionItem = ({
 
   const handleClose = () => {
     setAnchorEl(null)
+  }
+
+  const handleTouchStart = (event: any) => {
+    if (!isXsOrSm) return // Only handle long press on xs/sm devices
+
+    touchTimeout.current = setTimeout(() => {
+      handleClick(event) // Open Popover on long press
+    }, 500) // 500ms for long press
+  }
+
+  const handleTouchEnd = () => {
+    if (touchTimeout.current) {
+      clearTimeout(touchTimeout.current) // Clear timeout if touch ends early
+    }
+    console.log("holded")
   }
 
   const open = Boolean(anchorEl)
@@ -54,6 +77,10 @@ const ChatSessionItem = ({
       <div
         key={session.id}
         onClick={() => onSelect(session.session_id)}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={() => {
+          handleTouchEnd
+        }}
         className={`flex px-4 py-2 gap-3 rounded-2xl justify-between items-center group cursor-pointer transition duration-200 ${
           isSelected
             ? "bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-200"

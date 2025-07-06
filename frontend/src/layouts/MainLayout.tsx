@@ -6,40 +6,6 @@ import Navbar from "../components/Navbar"
 import Sidebar from "../components/Sidebar"
 import Login from "../pages/auth/Login"
 
-// Floating animation
-// const floatAnimation = keyframes`
-//   0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0.6; }
-//   50% { transform: translateY(-40vh) translateX(50px) rotate(180deg); opacity: 0.9; }
-//   100% { transform: translateY(-80vh) translateX(100px) rotate(360deg); opacity: 0.6; }
-// `
-
-// const FloatingBubbles = ({
-//   count = 8,
-//   baseSize = 30,
-//   color = "rgba(70, 90, 200, 0.2)",
-// }) => (
-//   <>
-//     {[...Array(count)].map((_, i) => (
-//       <Box
-//         key={i}
-//         sx={{
-//           position: "absolute",
-//           borderRadius: "50%",
-//           background: color,
-//           animation: `${floatAnimation} ${18 + i * 3}s linear infinite`,
-//           animationDelay: `${i * 2}s`,
-//           width: `${i * 10 + baseSize}px`,
-//           height: `${i * 10 + baseSize}px`,
-//           top: `${Math.random() * 100}%`,
-//           left: `${Math.random() * 100}%`,
-//           zIndex: 0,
-//           filter: "blur(1px)",
-//         }}
-//       />
-//     ))}
-//   </>
-// )
-
 const MainLayout = () => {
   const theme = useTheme()
   const belowMd = useMediaQuery(theme.breakpoints.down("md"))
@@ -53,7 +19,6 @@ const MainLayout = () => {
         flexDirection: "column",
         height: "100vh",
         overflow: "hidden",
-        // background: "linear-gradient(135deg, #f8f9ff 0%, #eef0fa 100%)",
         position: "relative",
       }}
     >
@@ -69,7 +34,7 @@ const MainLayout = () => {
         sx={{
           position: "sticky",
           top: 0,
-          zIndex: 1200, // Higher than bubbles
+          zIndex: 1200,
           width: "100%",
         }}
       >
@@ -83,7 +48,7 @@ const MainLayout = () => {
           flex: 1,
           overflow: "hidden",
           position: "relative",
-          pt: 0, // Remove padding top since Navbar is fixed
+          pt: 0,
         }}
       >
         {/* Sidebar */}
