@@ -1,3 +1,4 @@
+import { Box } from "@mui/material"
 import Drawer from "@mui/material/Drawer"
 import * as React from "react"
 
@@ -8,11 +9,17 @@ interface Props {
 }
 
 export default function SidebarDrawer({ open, onClose, content }: Props) {
+  const DrawerList = (
+    <Box sx={{ width: 300 }} role="presentation" onClick={onClose}>
+      {content}
+    </Box>
+  )
+
   return (
-    <div className="w-[300px]">
+    <div>
       <React.Fragment>
         <Drawer open={open} onClose={onClose}>
-          {content}
+          {DrawerList}
         </Drawer>
       </React.Fragment>
     </div>

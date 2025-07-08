@@ -7,9 +7,9 @@ import DialogContent from "@mui/material/DialogContent"
 import DialogTitle from "@mui/material/DialogTitle"
 import IconButton from "@mui/material/IconButton"
 import { styled, useTheme } from "@mui/material/styles"
-import { Trash2 } from "lucide-react"
+import { LogOut } from "lucide-react"
 
-interface ConfirmDeleteModalProps {
+interface LogoutDialogProps {
   open: boolean
   onClose: VoidFunction
   onConfirm: VoidFunction
@@ -34,50 +34,45 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   },
 }))
 
-export default function ConfirmDelete({
+const LogoutDialog = ({
   open,
   onClose,
   onConfirm,
-  title = "Confirm Delete",
-  description = "Are you sure you want to delete this item? This action cannot be undone.",
-}: ConfirmDeleteModalProps) {
+  title = "Confirm Logout",
+  description = "Are you sure you want to logout?",
+}: LogoutDialogProps) => {
   const theme = useTheme()
-
   const isBelowMd = useMediaQuery(theme.breakpoints.down("md"))
 
   return (
     <BootstrapDialog
       onClose={onClose}
-      aria-labelledby="confirm-delete-dialog-title"
+      aria-labelledby="logout-dialog-title"
       open={open}
     >
       <DialogTitle
         sx={{ m: 0, p: isBelowMd ? 2 : 3, fontWeight: 600 }}
-        id="confirm-delete-dialog-title"
+        id="logout-dialog-title"
       >
-        🗑️ {title}
+        🚪 {title}
       </DialogTitle>
       <IconButton
         aria-label="close"
         onClick={onClose}
-        sx={(theme) => ({
+        sx={{
           position: "absolute",
           right: 16,
           top: isBelowMd ? 13 : 16,
           color: theme.palette.grey[500],
-        })}
+        }}
       >
         <CloseIcon />
       </IconButton>
 
       <DialogContent dividers>
         <div className="flex flex-col items-center justify-center gap-6 min-w-[200px] md:min-w-[400px] min-h-[200px]">
-          <div className="p-4 bg-red-100 rounded-full">
-            {isBelowMd ? (
-              <Trash2 size={38} className="text-red-600" />
-            ) : (
-              <Trash2 size={48} className="text-red-600" />
-            )}
+          <div className="p-4 bg-yellow-100 rounded-full">
+            <LogOut size={isBelowMd ? 38 : 48} className="text-yellow-600" />
           </div>
 
           <div className="text-center">
@@ -110,16 +105,18 @@ export default function ConfirmDelete({
           variant="contained"
           size={isBelowMd ? "small" : "medium"}
           sx={{
-            backgroundColor: "#ef4444",
-            "&:hover": { backgroundColor: "#dc2626" },
-            color: "white",
+            backgroundColor: "#facc15",
+            "&:hover": { backgroundColor: "#eab308" },
+            color: "#1e293b",
             fontWeight: "bold",
             borderRadius: "8px",
           }}
         >
-          Delete
+          Logout
         </Button>
       </DialogActions>
     </BootstrapDialog>
   )
 }
+
+export default LogoutDialog

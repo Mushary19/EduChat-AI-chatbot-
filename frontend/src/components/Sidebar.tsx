@@ -1,13 +1,8 @@
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined"
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline"
-import {
-  Avatar,
-  CircularProgress,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material"
+import { CircularProgress, useMediaQuery, useTheme } from "@mui/material"
 import Popover from "@mui/material/Popover"
-import { MoreHorizontal } from "lucide-react"
+import { LogOut, MoreHorizontal } from "lucide-react"
 import * as React from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { useAuth } from "../lib/hooks/useAuth"
@@ -19,6 +14,7 @@ import {
 } from "../services/chatbot/mutations"
 import { useLoadChatSessions } from "../services/chatbot/queries"
 import ConfirmDelete from "./ConfirmDelete"
+import LogoutDialog from "./LogoutDialog"
 
 const ChatSessionItem = ({
   session,
@@ -79,10 +75,10 @@ const ChatSessionItem = ({
       <div
         key={session.id}
         onClick={() => onSelect(session.session_id)}
-        onTouchStart={handleTouchStart}
-        onTouchEnd={() => {
-          handleTouchEnd
-        }}
+        // onTouchStart={handleTouchStart}
+        // onTouchEnd={() => {
+        //   handleTouchEnd
+        // }}
         className={`flex px-4 py-2 gap-3 rounded-2xl justify-between items-center group cursor-pointer transition duration-200 ${
           isSelected
             ? "bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-200"
@@ -166,7 +162,8 @@ const ChatSessionItem = ({
               </li>
               <li
                 className="flex justify-between items-center px-4 py-2 rounded-lg cursor-pointer transition hover:bg-red-400 hover:text-white"
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation()
                   setOpenDelete(true)
                   handleClose()
                 }}
@@ -213,6 +210,9 @@ const Sidebar = () => {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
 
+  const [openLogout, setOpenLogout] = React.useState(false)
+  const toggleLogout = () => setOpenLogout((prev) => !prev)
+
   const { user } = useAuth()
 
   const { data: chatSessions, isPending } = useLoadChatSessions(user?.id ?? 0)
@@ -238,6 +238,11 @@ const Sidebar = () => {
     }
   }
 
+  const handleLogout = () => {
+    localStorage.setItem("chatbot_user", "")
+    navigate("/auth/login")
+  }
+
   React.useEffect(() => {
     if (isDeleted) {
       navigate("/")
@@ -246,14 +251,14 @@ const Sidebar = () => {
 
   return (
     <>
-      <section className="w-full h-full overflow-y-auto pt-35 md:pt-0 bg-white relative">
+      <section className="w-full h-full overflow-y-auto pt-20 pb-20 md:pt-0 bg-white relative">
         {/* Fixed top section on small devices */}
-        <div className="fixed top-0 left-0 right-0 p-4 bg-white z-10 md:hidden w-[345px]">
+        <div className="fixed top-0 left-0 right-0 p-4 bg-white z-10 md:hidden w-[300px]">
           {/* Profile row */}
-          <div className="flex justify-between items-center px-4 py-1.5 bg-gray-200 rounded-2xl mb-2">
+          {/* <div className="flex justify-between items-center px-4 py-1.5 bg-gray-200 rounded-2xl mb-2">
             <Avatar />
             <MoreHorizontal />
-          </div>
+          </div> */}
 
           {/* New Chat Button */}
           <button
@@ -315,7 +320,29 @@ const Sidebar = () => {
           ))}
           <div className="p-1" />
         </div>
+
+        {/* Logout button - only for small devices */}
+        <div
+          className="fixed bottom-0 left-0 right-0 py-3 px-4 bg-white z-10 md:hidden w-[300px]"
+          onClick={(e) => {
+            e.stopPropagation()
+            setOpenLogout(true)
+          }}
+        >
+          <button className="flex items-center justify-between bg-gray-100 hover:bg-gray-200 transition py-3 px-5 rounded-2xl w-full">
+            <LogOut className="text-gray-700" />
+            <span className="text-gray-800 font-medium">Logout</span>
+          </button>
+        </div>
       </section>
+
+      {openLogout && (
+        <LogoutDialog
+          open={openLogout}
+          onClose={toggleLogout}
+          onConfirm={handleLogout}
+        />
+      )}
     </>
   )
 }

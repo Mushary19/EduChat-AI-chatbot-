@@ -13,8 +13,8 @@ export const useLogin = () => {
     mutationFn: (body: ILoginBody) => login("/auth/login/", body),
     onSuccess: (data: ILoginResponse) => {
       toast.success(`Welcome ${data.user.first_name} ${data.user.last_name}!`)
-
       dispatch(loginSuccess(data.user))
+      localStorage.setItem("chatbot_user", JSON.stringify(data.user.first_name))
     },
     onError: (error: any) => {
       toast.error(error?.data.error || "Something went wrong.")
