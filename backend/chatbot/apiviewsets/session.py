@@ -2,6 +2,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from chatbot.serializers.session import ChatSessionSerializer
 from chatbot.models.session import ChatSession
+from rest_framework.response import Response
 
 
 class ChatSessionViewSet(ModelViewSet):
@@ -17,3 +18,7 @@ class ChatSessionViewSet(ModelViewSet):
             queryset = queryset.filter(user__id=user_id)
 
         return queryset
+
+    def destroy(self, request, *args, **kwargs):
+        super().destroy(request, *args, **kwargs)
+        return Response({"message": "Session deleted successfully."}, 200)

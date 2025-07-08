@@ -1,4 +1,4 @@
-import { Mic, Send } from "lucide-react"
+import { Info, Mic, Send } from "lucide-react"
 import {
   useEffect,
   useRef,
@@ -6,6 +6,7 @@ import {
   type Dispatch,
   type SetStateAction,
 } from "react"
+import toast from "react-hot-toast"
 import { useNavigate } from "react-router-dom"
 import SpeechRecognition, {
   useSpeechRecognition,
@@ -119,14 +120,34 @@ const InputBar: React.FC<Props> = (props) => {
     }
   }
 
-  if (!isMicrophoneAvailable) {
-    console.log("enable your microphone")
-    return <span>Please enable your microphone to use speech service.</span>
-  }
+  const handleCheckMicroPhoneEligibility = () => {
+    if (!isMicrophoneAvailable) {
+      toast.custom(
+        <div className="flex gap-2 items-center p-4 bg-white rounded shadow">
+          <Info color="gray" />
+          <span className="text-gray-800">
+            It seems your microphone is disabled. Please turn it on to use voice
+            recognition.
+          </span>
+        </div>
+      )
+      return false
+    }
 
-  if (!browserSupportsSpeechRecognition) {
-    console.log("browser doesn't support speech recognition")
-    return <span>Your browser does not support speech recognition.</span>
+    if (!browserSupportsSpeechRecognition) {
+      toast.custom(
+        <div className="flex gap-2 items-center p-4 bg-white rounded shadow">
+          <Info color="gray" />
+          <span className="text-gray-800">
+            Your browser doesn't support voice recognition. Please switch to a
+            modern browser.
+          </span>
+        </div>
+      )
+      return false
+    }
+
+    return true
   }
 
   useEffect(() => {
@@ -184,6 +205,9 @@ const InputBar: React.FC<Props> = (props) => {
               aria-label="Mic"
               disabled={isSendingMessage}
               onClick={() => {
+                const eligible = handleCheckMicroPhoneEligibility()
+                if (!eligible) return
+
                 setOpenMicroPhone(true)
                 SpeechRecognition.startListening({
                   continuous: true,

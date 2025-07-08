@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query"
+import { toast } from "react-hot-toast"
 import { useDispatch } from "react-redux"
-import { toast } from "react-toastify"
 import { loginSuccess } from "../../features/user/userSlice"
 import type { ILoginBody, ILoginResponse } from "../../lib/types/auth/login"
 import type { IRegisterBody } from "../../lib/types/auth/register"

@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { Toaster } from "react-hot-toast"
 import { Provider } from "react-redux"
-import { Bounce, ToastContainer } from "react-toastify"
 import { store } from "./app/store"
 import AppRoutes from "./routes/AppRoutes"
 
@@ -10,18 +10,19 @@ function App() {
     <>
       <Provider store={store}>
         <QueryClientProvider client={queryClient}>
-          <ToastContainer
-            position="top-right"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick={false}
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="light"
-            transition={Bounce}
+          <Toaster
+            position="top-center"
+            reverseOrder={false}
+            gutter={8}
+            containerClassName=""
+            containerStyle={{}}
+            toastOptions={{
+              duration: 4000,
+              removeDelay: 1000,
+              success: {
+                duration: 3000,
+              },
+            }}
           />
           <AppRoutes />
         </QueryClientProvider>

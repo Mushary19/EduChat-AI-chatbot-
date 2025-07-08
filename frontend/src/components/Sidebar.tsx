@@ -72,6 +72,8 @@ const ChatSessionItem = ({
 
   const { mutate: updateSessionTitle } = useUpdateSessionTitle()
 
+  console.log(session.session_id)
+
   return (
     <>
       <div
@@ -150,7 +152,8 @@ const ChatSessionItem = ({
             <ul className="text-sm text-black">
               <li
                 className="flex justify-between items-center px-4 py-2 rounded-lg cursor-pointer transition hover:bg-gradient-to-r hover:bg-gray-100"
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation()
                   handleClose()
                   setIsEditing(true)
                   setTimeout(() => {
@@ -228,6 +231,7 @@ const Sidebar = () => {
   }
 
   const handleCreateChatSession = async () => {
+    // if (!sessionId) return
     const response = await createSession({ user: user?.id ?? 0 })
     if (response.session_id) {
       navigate(`/?session_id=${response.session_id}`)
