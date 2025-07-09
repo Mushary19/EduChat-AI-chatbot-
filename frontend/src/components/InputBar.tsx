@@ -124,7 +124,7 @@ const InputBar: React.FC<Props> = (props) => {
     if (!isMicrophoneAvailable) {
       toast.custom(
         <div className="flex gap-2 items-center p-4 bg-white rounded shadow">
-          <Info color="gray" />
+          <Info color="gray" size={43} />
           <span className="text-gray-800">
             It seems your microphone is disabled. Please turn it on to use voice
             recognition.
@@ -137,7 +137,7 @@ const InputBar: React.FC<Props> = (props) => {
     if (!browserSupportsSpeechRecognition) {
       toast.custom(
         <div className="flex gap-2 items-center p-4 bg-white rounded shadow">
-          <Info color="gray" />
+          <Info color="gray" size={23} />
           <span className="text-gray-800">
             Your browser doesn't support voice recognition. Please switch to a
             modern browser.

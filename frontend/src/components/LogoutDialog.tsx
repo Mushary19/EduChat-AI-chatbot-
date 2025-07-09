@@ -70,7 +70,7 @@ const LogoutDialog = ({
       </IconButton>
 
       <DialogContent dividers>
-        <div className="flex flex-col items-center justify-center gap-6 min-w-[200px] md:min-w-[400px] min-h-[200px]">
+        <div className="flex flex-col items-center justify-center gap-6 min-w-[250px] md:min-w-[400px] min-h-[200px]">
           <div className="p-4 bg-yellow-100 rounded-full">
             <LogOut size={isBelowMd ? 38 : 48} className="text-yellow-600" />
           </div>

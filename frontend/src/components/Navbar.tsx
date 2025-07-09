@@ -17,6 +17,7 @@ import { useState } from "react"
 import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { logoutSuccess } from "../features/user/userSlice"
+import LogoutDialog from "./LogoutDialog"
 import Sidebar from "./Sidebar"
 import SidebarDrawer from "./SidebarDrawer"
 
@@ -28,9 +29,16 @@ const Navbar = () => {
   const theme = useTheme()
   const isBelowMd = useMediaQuery(theme.breakpoints.down("md"))
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const [openLogout, setOpenLogout] = useState(false)
+  const [openProfile, setOpenProfile] = useState(false)
+  const [openSettings, setOpenSettings] = useState(false)
   const open = Boolean(anchorEl)
   const navigate = useNavigate()
   const dispatch = useDispatch()
+
+  const toggleOpenLogout = () => setOpenLogout((prev) => !prev)
+  const toggleOpenProfile = () => setOpenProfile((prev) => !prev)
+  const toggleOpenSettings = () => setOpenSettings((prev) => !prev)
 
   console.log(isBelowMd)
 
@@ -101,7 +109,7 @@ const Navbar = () => {
           </IconButton>
 
           {/* Dropdown Menu */}
-          <Menu
+          {/* <Menu
             anchorEl={anchorEl}
             open={open}
             onClose={handleMenuClose}
@@ -145,11 +153,14 @@ const Navbar = () => {
               <SettingsIcon sx={{ mr: 1.5, fontSize: 20 }} />
               Settings
             </MenuItem>
-            <MenuItem onClick={handleLogout} sx={{ color: "error.main" }}>
+            <MenuItem
+              onClick={() => setOpenLogout(true)}
+              sx={{ color: "error.main" }}
+            >
               <LogoutIcon sx={{ mr: 1.5, fontSize: 20 }} />
               Logout
             </MenuItem>
-          </Menu>
+          </Menu> */}
         </Box>
       ) : (
         <Box
@@ -239,23 +250,30 @@ const Navbar = () => {
             >
               <MenuItem
                 onClick={() => {
-                  navigate("/profile")
+                  // navigate("/profile")
+                  setOpenProfile(true)
                   handleMenuClose()
                 }}
+                disabled
               >
                 <AccountCircleIcon sx={{ mr: 1.5, fontSize: 20 }} />
                 Profile
               </MenuItem>
               <MenuItem
                 onClick={() => {
-                  navigate("/settings")
+                  // navigate("/settings")
+                  setOpenSettings(true)
                   handleMenuClose()
                 }}
+                disabled
               >
                 <SettingsIcon sx={{ mr: 1.5, fontSize: 20 }} />
                 Settings
               </MenuItem>
-              <MenuItem onClick={handleLogout} sx={{ color: "error.main" }}>
+              <MenuItem
+                onClick={() => setOpenLogout(true)}
+                sx={{ color: "error.main" }}
+              >
                 <LogoutIcon sx={{ mr: 1.5, fontSize: 20 }} />
                 Logout
               </MenuItem>
@@ -271,6 +289,28 @@ const Navbar = () => {
           content={<Sidebar />}
         />
       </div>
+
+      <div>
+        {openLogout && (
+          <LogoutDialog
+            open={openLogout}
+            onClose={toggleOpenLogout}
+            onConfirm={handleLogout}
+          />
+        )}
+      </div>
+
+      {/* <div>
+        {openProfile && (
+          <Dialog
+            open={openProfile}
+            onClose={toggleOpenProfile}
+            title="Profile"
+            maxWidth="md"
+            content="Profile under construction."
+          />
+        )}
+      </div> */}
     </>
   )
 }

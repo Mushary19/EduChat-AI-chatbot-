@@ -4,7 +4,7 @@ const BASE_API_URL = import.meta.env.VITE_API_URL
 // http://192.168.8.150:8000/api/
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:8000/api/",
+  baseURL: "http://192.168.8.150:8000/api/",
   withCredentials: true,
 })
 

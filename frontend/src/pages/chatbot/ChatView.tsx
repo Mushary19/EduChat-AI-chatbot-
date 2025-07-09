@@ -93,7 +93,7 @@ const ChatView: React.FC<Props> = (props) => {
                       <div
                         className={`px-4 py-3 rounded-xl text-sm shadow ${
                           isUser
-                            ? "bg-blue-500 text-white rounded-br-none"
+                            ? "bg-indigo-500 text-white rounded-br-none"
                             : "bg-gray-100 text-gray-800 rounded-bl-none"
                         }`}
                       >
@@ -102,7 +102,7 @@ const ChatView: React.FC<Props> = (props) => {
 
                       {/* Icon Row */}
                       <div
-                        className={`flex gap-3 mt-2 pl-4 opacity-0 group-hover:opacity-100 transition duration-300 ${
+                        className={`flex gap-4 lg:gap-3 mt-2 pl-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition duration-300 ${
                           isUser ? "justify-end" : "justify-start"
                         }`}
                       >
