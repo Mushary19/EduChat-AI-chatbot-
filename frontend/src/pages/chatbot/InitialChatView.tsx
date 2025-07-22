@@ -31,8 +31,8 @@ const InitialChatView: React.FC<Props> = ({
         </div>
 
         <p className="text-gray-600  md:text-lg max-w-xl mx-auto leading-relaxed px-3 md:p-0">
-          Select a session from the sidebar or start a new one. I’m here to help
-          you with your questions, studies, or anything you need.
+          Start a new session or pick one from the sidebar. I can help you with
+          science questions, homework, and study guidance.
         </p>
       </motion.div>
 

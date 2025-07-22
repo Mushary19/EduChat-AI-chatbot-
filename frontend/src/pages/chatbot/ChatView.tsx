@@ -3,7 +3,6 @@ import { Copy, ThumbsDown, ThumbsUp } from "lucide-react"
 import { useEffect, type Dispatch, type SetStateAction } from "react"
 import ChatLoader from "../../components/ChatLoader"
 import MessageLoader from "../../components/MessageLoader"
-import { useAuth } from "../../lib/hooks/useAuth"
 import type { IChatMessageResponseBody } from "../../lib/types/chatbot/chatMessage"
 import { useLikeChatMessage } from "../../services/chatbot/mutations"
 import { useLoadChatMessagesBySessionId } from "../../services/chatbot/queries"
@@ -27,18 +26,10 @@ const ChatView: React.FC<Props> = (props) => {
   } = props
   console.log(sessionId)
 
-  const { user } = useAuth()
-
-  const initialChatBanner = `Hii, ${user?.first_name} ${user?.last_name}!, How can i help you today?.`
-
   const { data: chatMessages, isPending } = useLoadChatMessagesBySessionId(
     sessionId ?? ""
   )
   const allMessages = [...(chatMessages ?? []), ...optimisticMessages]
-
-  console.log(optimisticMessages)
-
-  console.log(isSendingMessage, "sending message")
 
   const { mutate: likeMessage } = useLikeChatMessage()
 
@@ -93,7 +84,7 @@ const ChatView: React.FC<Props> = (props) => {
                       <div
                         className={`px-4 py-3 rounded-xl text-sm shadow ${
                           isUser
-                            ? "bg-indigo-500 text-white rounded-br-none"
+                            ? "bg-blue-500 text-white rounded-br-none"
                             : "bg-gray-100 text-gray-800 rounded-bl-none"
                         }`}
                       >
@@ -130,11 +121,6 @@ const ChatView: React.FC<Props> = (props) => {
                             </Tooltip>
                           </>
                         )}
-                        {/* {isUser && (
-                          <Tooltip title="Regenerate">
-                            <Recycle className="w-4 h-4 cursor-pointer text-gray-400 hover:text-gray-600" />
-                          </Tooltip>
-                        )} */}
                       </div>
                     </div>
                   </div>
