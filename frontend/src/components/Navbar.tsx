@@ -13,10 +13,13 @@ import {
   useTheme,
 } from "@mui/material"
 import { MessageCirclePlus } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import toast from "react-hot-toast"
 import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { logoutSuccess } from "../features/user/userSlice"
+import { useAuth } from "../lib/hooks/useAuth"
+import { useCreateChatSession } from "../services/chatbot/mutations"
 import LogoutDialog from "./LogoutDialog"
 import Sidebar from "./Sidebar"
 import SidebarDrawer from "./SidebarDrawer"
@@ -30,17 +33,28 @@ const Navbar = () => {
   const isBelowMd = useMediaQuery(theme.breakpoints.down("md"))
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [openLogout, setOpenLogout] = useState(false)
-  const [openProfile, setOpenProfile] = useState(false)
-  const [openSettings, setOpenSettings] = useState(false)
+  // const [openProfile, setOpenProfile] = useState(false)
+  // const [openSettings, setOpenSettings] = useState(false)
   const open = Boolean(anchorEl)
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const toggleOpenLogout = () => setOpenLogout((prev) => !prev)
-  const toggleOpenProfile = () => setOpenProfile((prev) => !prev)
-  const toggleOpenSettings = () => setOpenSettings((prev) => !prev)
+  const { user } = useAuth()
 
-  console.log(isBelowMd)
+  const toggleOpenLogout = () => setOpenLogout((prev) => !prev)
+  // const toggleOpenProfile = () => setOpenProfile((prev) => !prev)
+  // const toggleOpenSettings = () => setOpenSettings((prev) => !prev)
+  const { mutateAsync: createNewSession } = useCreateChatSession()
+
+  const handleCreateNewSession = async () => {
+    console.log("clicked")
+    if (!user) {
+      toast.error("Authentication required")
+      navigate("/auth/login/")
+    }
+    const response = await createNewSession({ user: user?.id ?? 0 })
+    if (response.session_id) navigate(`/?session_id=${response.session_id}`)
+  }
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
@@ -53,8 +67,16 @@ const Navbar = () => {
   const handleLogout = () => {
     handleMenuClose()
     dispatch(logoutSuccess())
+    localStorage.removeItem("chatbot_user")
     navigate("/auth/login/")
   }
+
+  useEffect(() => {
+    if (!user) {
+      toast.error("Authentication required")
+      navigate("/auth/login/")
+    }
+  }, [user, navigate])
 
   return (
     <>
@@ -100,7 +122,7 @@ const Navbar = () => {
 
           {/* Right - Add Session Icon */}
           <IconButton
-            onClick={() => console.log("Add new session")}
+            onClick={() => handleCreateNewSession()}
             sx={{
               color: "primary.main",
             }}
@@ -251,7 +273,7 @@ const Navbar = () => {
               <MenuItem
                 onClick={() => {
                   // navigate("/profile")
-                  setOpenProfile(true)
+                  // setOpenProfile(true)
                   handleMenuClose()
                 }}
                 disabled
@@ -262,7 +284,7 @@ const Navbar = () => {
               <MenuItem
                 onClick={() => {
                   // navigate("/settings")
-                  setOpenSettings(true)
+                  // setOpenSettings(true)
                   handleMenuClose()
                 }}
                 disabled

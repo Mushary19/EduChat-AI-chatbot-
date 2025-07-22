@@ -1,6 +1,6 @@
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined"
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline"
-import { CircularProgress, useMediaQuery, useTheme } from "@mui/material"
+import { CircularProgress } from "@mui/material"
 import Popover from "@mui/material/Popover"
 import { LogOut, MoreHorizontal } from "lucide-react"
 import * as React from "react"
@@ -27,15 +27,15 @@ const ChatSessionItem = ({
   onSelect: (id: string) => void
   onDelete: (id: string) => void
 }) => {
-  const theme = useTheme()
+  // const theme = useTheme()
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const [openDelete, setOpenDelete] = React.useState<boolean>(false)
   const [isEditing, setIsEditing] = React.useState(false)
   const [updatedTitle, setUpdatedTitle] = React.useState(session.title)
-  const isXsOrSm = useMediaQuery(theme.breakpoints.down("md"))
+  // const isXsOrSm = useMediaQuery(theme.breakpoints.down("md"))
 
   const titleRef = React.useRef<HTMLInputElement>(null)
-  const touchTimeout = React.useRef<number | null>(null)
+  // const touchTimeout = React.useRef<number | null>(null)
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation()
@@ -46,20 +46,20 @@ const ChatSessionItem = ({
     setAnchorEl(null)
   }
 
-  const handleTouchStart = (event: any) => {
-    if (!isXsOrSm) return // Only handle long press on xs/sm devices
+  // const handleTouchStart = (event: any) => {
+  //   if (!isXsOrSm) return // Only handle long press on xs/sm devices
 
-    touchTimeout.current = setTimeout(() => {
-      handleClick(event) // Open Popover on long press
-    }, 500) // 500ms for long press
-  }
+  //   touchTimeout.current = setTimeout(() => {
+  //     handleClick(event) // Open Popover on long press
+  //   }, 500) // 500ms for long press
+  // }
 
-  const handleTouchEnd = () => {
-    if (touchTimeout.current) {
-      clearTimeout(touchTimeout.current) // Clear timeout if touch ends early
-    }
-    console.log("holded")
-  }
+  // const handleTouchEnd = () => {
+  //   if (touchTimeout.current) {
+  //     clearTimeout(touchTimeout.current) // Clear timeout if touch ends early
+  //   }
+  //   console.log("holded")
+  // }
 
   const open = Boolean(anchorEl)
   const id = open ? `popover-${session.session_id}` : undefined
@@ -67,8 +67,6 @@ const ChatSessionItem = ({
   const toggleDelete = () => setOpenDelete((prev) => !prev)
 
   const { mutate: updateSessionTitle } = useUpdateSessionTitle()
-
-  console.log(session.session_id)
 
   return (
     <>
@@ -239,7 +237,7 @@ const Sidebar = () => {
   }
 
   const handleLogout = () => {
-    localStorage.setItem("chatbot_user", "")
+    localStorage.removeItem("chatbot_user")
     navigate("/auth/login")
   }
 
