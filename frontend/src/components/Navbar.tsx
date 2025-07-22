@@ -47,11 +47,6 @@ const Navbar = () => {
   const { mutateAsync: createNewSession } = useCreateChatSession()
 
   const handleCreateNewSession = async () => {
-    console.log("clicked")
-    if (!user) {
-      toast.error("Authentication required")
-      navigate("/auth/login/")
-    }
     const response = await createNewSession({ user: user?.id ?? 0 })
     if (response.session_id) navigate(`/?session_id=${response.session_id}`)
   }

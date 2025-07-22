@@ -213,6 +213,8 @@ const Sidebar = () => {
 
   const { user } = useAuth()
 
+  const sessionId = searchParams.get("session_id")
+
   const { data: chatSessions, isPending } = useLoadChatSessions(user?.id ?? 0)
   const { mutateAsync: createSession, isPending: isCreatePending } =
     useCreateChatSession()
@@ -229,7 +231,7 @@ const Sidebar = () => {
   }
 
   const handleCreateChatSession = async () => {
-    // if (!sessionId) return
+    if (!sessionId) return
     const response = await createSession({ user: user?.id ?? 0 })
     if (response.session_id) {
       navigate(`/?session_id=${response.session_id}`)

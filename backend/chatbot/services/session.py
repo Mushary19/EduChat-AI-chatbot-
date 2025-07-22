@@ -12,32 +12,13 @@ CHATBOT_API_KEY = os.environ.get("CHATBOT_API_KEY")
 
 def chat_with_bot(prompt, session, request):
 
-    user = User.objects.get(id=request.data.get("userId", 1))
-
-    first_name = user.first_name or "Mushary"
-    last_name = user.last_name or "Rilwan"
-
-    lowered_prompt = prompt.lower().strip()
-
-    if lowered_prompt in ["thank you", "thanks", "thank u", "thx"]:
-        reply = f"You’re so welcome, {first_name} {last_name}! 😊 I'm always here to help!\n\nIs there anything else you’d like to explore in science?"
-        ChatLog.objects.create(session=session, sender=ChatSender.USER, message=prompt)
-        ChatLog.objects.create(session=session, sender=ChatSender.SYSTEM, message=reply)
-        return reply
-
-    if lowered_prompt in ["what's my name", "whats my name", "do you know my name"]:
-        reply = f"Of course I do! Your name is {first_name} {last_name} 😊 It's great to chat with you!\n\nWhat would you like to learn today?"
-        ChatLog.objects.create(session=session, sender=ChatSender.USER, message=prompt)
-        ChatLog.objects.create(session=session, sender=ChatSender.SYSTEM, message=reply)
-        return reply
-
     url = "https://openrouter.ai/api/v1/chat/completions"
     headers = {
         "Authorization": f"Bearer {CHATBOT_API_KEY}",
         "Content-Type": "application/json",
     }
     data = {
-        "model": "meta-llama/llama-4-maverick:free",
+        "model": "deepseek/deepseek-r1-0528:free",
         "messages": [
             {
                 "role": "system",
