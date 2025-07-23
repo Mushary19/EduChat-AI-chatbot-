@@ -20,6 +20,7 @@ import { logoutSuccess } from "../features/user/userSlice"
 import { useAuth } from "../lib/hooks/useAuth"
 import { useCreateChatSession } from "../services/chatbot/mutations"
 import LogoutDialog from "./LogoutDialog"
+import ProfileDialog from "./ProfileDialog"
 import Sidebar from "./Sidebar"
 import SidebarDrawer from "./SidebarDrawer"
 
@@ -32,7 +33,7 @@ const Navbar = () => {
   const isBelowMd = useMediaQuery(theme.breakpoints.down("md"))
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [openLogout, setOpenLogout] = useState(false)
-  // const [openProfile, setOpenProfile] = useState(false)
+  const [openProfile, setOpenProfile] = useState(false)
   // const [openSettings, setOpenSettings] = useState(false)
   const open = Boolean(anchorEl)
   const navigate = useNavigate()
@@ -41,7 +42,7 @@ const Navbar = () => {
   const { user } = useAuth()
 
   const toggleOpenLogout = () => setOpenLogout((prev) => !prev)
-  // const toggleOpenProfile = () => setOpenProfile((prev) => !prev)
+  const toggleOpenProfile = () => setOpenProfile((prev) => !prev)
   // const toggleOpenSettings = () => setOpenSettings((prev) => !prev)
   const { mutateAsync: createNewSession } = useCreateChatSession()
 
@@ -123,60 +124,6 @@ const Navbar = () => {
           >
             <MessageCirclePlus />
           </IconButton>
-
-          {/* Dropdown Menu */}
-          {/* <Menu
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleMenuClose}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            PaperProps={{
-              sx: {
-                mt: 1.5,
-                minWidth: 200,
-                borderRadius: 2,
-                boxShadow: "0 4px 20px rgba(0,0,0,0.12)",
-                "& .MuiMenuItem-root": {
-                  px: 2,
-                  py: 1.5,
-                  typography: "body2",
-                },
-              },
-            }}
-          >
-            <MenuItem
-              onClick={() => {
-                navigate("/profile")
-                handleMenuClose()
-              }}
-            >
-              <AccountCircleIcon sx={{ mr: 1.5, fontSize: 20 }} />
-              Profile
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                navigate("/settings")
-                handleMenuClose()
-              }}
-            >
-              <SettingsIcon sx={{ mr: 1.5, fontSize: 20 }} />
-              Settings
-            </MenuItem>
-            <MenuItem
-              onClick={() => setOpenLogout(true)}
-              sx={{ color: "error.main" }}
-            >
-              <LogoutIcon sx={{ mr: 1.5, fontSize: 20 }} />
-              Logout
-            </MenuItem>
-          </Menu> */}
         </Box>
       ) : (
         <Box
@@ -267,10 +214,9 @@ const Navbar = () => {
               <MenuItem
                 onClick={() => {
                   // navigate("/profile")
-                  // setOpenProfile(true)
+                  setOpenProfile(true)
                   handleMenuClose()
                 }}
-                disabled
               >
                 <AccountCircleIcon sx={{ mr: 1.5, fontSize: 20 }} />
                 Profile
@@ -316,17 +262,15 @@ const Navbar = () => {
         )}
       </div>
 
-      {/* <div>
+      <div>
         {openProfile && (
-          <Dialog
+          <ProfileDialog
             open={openProfile}
             onClose={toggleOpenProfile}
-            title="Profile"
-            maxWidth="md"
-            content="Profile under construction."
+            user={user ?? null}
           />
         )}
-      </div> */}
+      </div>
     </>
   )
 }
