@@ -21,7 +21,7 @@ const InitialChatView: React.FC<Props> = ({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="space-y-4"
+        className="space-y-3 md:space-y-4"
       >
         <div className="flex items-center justify-center gap-3">
           <Sparkles className="w-8 h-8 text-indigo-500 animate-pulse" />
@@ -30,7 +30,7 @@ const InitialChatView: React.FC<Props> = ({
           </h2>
         </div>
 
-        <p className="text-gray-600  md:text-lg max-w-xl mx-auto leading-relaxed px-3 md:p-0">
+        <p className="text-gray-500  md:text-lg max-w-xl mx-auto leading-relaxed px-3 md:p-0">
           Start a new session or pick one from the sidebar. I can help you with
           science questions, homework, and study guidance.
         </p>

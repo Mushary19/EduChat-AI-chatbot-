@@ -262,23 +262,14 @@ const Sidebar = () => {
 
           {/* New Chat Button */}
           <button
-            className="w-full flex items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white font-semibold rounded-2xl shadow-md hover:scale-[1.02] hover:shadow-lg transition-transform duration-200 ease-in-out"
+            className="w-full flex items-center justify-center gap-3 px-5 py-3 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white font-semibold rounded-2xl shadow-md hover:scale-[1.02] hover:shadow-lg transition-transform duration-200 ease-in-out cursor-pointer"
             onClick={handleCreateChatSession}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 4v16m8-8H4"
-              />
-            </svg>
+            <img
+              src="/assets/pen.png"
+              alt="New chat icon"
+              className="w-5 h-5"
+            />
             {isCreatePending ? <CircularProgress size={20} /> : "New Chat"}
           </button>
         </div>
@@ -286,23 +277,14 @@ const Sidebar = () => {
         {/* Sticky on large screens */}
         <div className="hidden md:block sticky top-0 z-10 bg-white p-4">
           <button
-            className="w-full flex items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white font-semibold rounded-2xl shadow-md hover:scale-[1.02] hover:shadow-lg transition-transform duration-200 ease-in-out"
+            className="w-full flex items-center justify-center gap-3 px-5 py-3 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white font-semibold rounded-2xl shadow-md hover:scale-[1.02] hover:shadow-lg transition-transform duration-200 ease-in-out cursor-pointer"
             onClick={handleCreateChatSession}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 4v16m8-8H4"
-              />
-            </svg>
+            <img
+              src="/assets/pen.png"
+              alt="New chat icon"
+              className="w-5 h-5"
+            />
             {isCreatePending ? <CircularProgress size={20} /> : "New Chat"}
           </button>
         </div>
@@ -323,7 +305,7 @@ const Sidebar = () => {
 
         {/* Logout button - only for small devices */}
         <div
-          className="fixed bottom-0 left-0 right-0 py-3 px-4 bg-white z-10 md:hidden w-[300px]"
+          className="fixed bottom-0 left-0 right-0 py-3 px-4 bg-white border-none z-10 md:hidden w-[300px]"
           onClick={(e) => {
             e.stopPropagation()
             setOpenLogout(true)
