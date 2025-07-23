@@ -64,7 +64,7 @@ const InputBar: React.FC<Props> = (props) => {
   console.log(transcript)
   console.log(listening)
 
-  const { mutate: sendChatMessage, isSuccess } = useSendChatMessage()
+  const { mutate: sendChatMessage } = useSendChatMessage()
 
   const { mutateAsync: createSession } = useCreateChatSession()
 

@@ -1,6 +1,5 @@
 import AccountCircleIcon from "@mui/icons-material/AccountCircle"
 import LogoutIcon from "@mui/icons-material/Logout"
-import MenuIcon from "@mui/icons-material/Menu"
 import SettingsIcon from "@mui/icons-material/Settings"
 import {
   Avatar,
@@ -99,7 +98,7 @@ const Navbar = () => {
               },
             }}
           >
-            <MenuIcon className="text-gray-500" />
+            <img src="/assets/menu.png" alt="menu icon" className="w-6 h-6" />
           </IconButton>
 
           {/* Center - Session Title */}
@@ -235,7 +234,7 @@ const Navbar = () => {
                 },
               }}
             >
-              <MenuIcon />
+              <img src="/assets/menu.png" alt="menu icon" className="w-6 h-6" />
             </IconButton>
 
             {/* Dropdown Menu */}
