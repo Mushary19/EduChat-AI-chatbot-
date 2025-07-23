@@ -40,7 +40,9 @@ const ChatView: React.FC<Props> = (props) => {
 
   return (
     <>
-      {sessionId && allMessages.length === 0 ? (
+      {isPending ? (
+        <ChatLoader />
+      ) : sessionId && allMessages.length === 0 ? (
         <div className="flex flex-col h-full ">
           <div className="my-auto">
             <InitialChatView
@@ -50,8 +52,6 @@ const ChatView: React.FC<Props> = (props) => {
             />
           </div>
         </div>
-      ) : isPending ? (
-        <ChatLoader />
       ) : (
         <>
           <div className="h-full overflow-y-auto px-4 pt-6 lg:pb-2 bg-white">

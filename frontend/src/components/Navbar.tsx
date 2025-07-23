@@ -41,6 +41,8 @@ const Navbar = () => {
 
   const { user } = useAuth()
 
+  console.log(user)
+
   const toggleOpenLogout = () => setOpenLogout((prev) => !prev)
   const toggleOpenProfile = () => setOpenProfile((prev) => !prev)
   // const toggleOpenSettings = () => setOpenSettings((prev) => !prev)
@@ -263,11 +265,11 @@ const Navbar = () => {
       </div>
 
       <div>
-        {openProfile && (
+        {openProfile && user && (
           <ProfileDialog
             open={openProfile}
             onClose={toggleOpenProfile}
-            user={user ?? null}
+            user={user}
           />
         )}
       </div>

@@ -12,7 +12,7 @@ const ProfileDialog: React.FC<Props> = ({ open, onClose, user }) => {
   if (!open) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity duration-300">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm transition-opacity duration-300">
       <div
         className="bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6 md:p-8 text-gray-800 animate-scale-in"
         onClick={(e) => e.stopPropagation()}
