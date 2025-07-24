@@ -55,77 +55,90 @@ const ChatView: React.FC<Props> = (props) => {
       ) : (
         <>
           <div className="h-full overflow-y-auto px-4 pt-6 lg:pb-2 bg-white">
-            {isSendingMessage && (
-              <div className="flex justify-start">
-                <div className="max-w-3xl mx-auto space-y-4">
-                  <MessageLoader />
-                </div>
-              </div>
-            )}
-
             <div className="max-w-3xl mx-auto space-y-4">
-              {(allMessages ?? []).map((msg: IChatMessageResponseBody) => {
-                const isUser = msg.sender === "USER"
+              {(allMessages ?? []).map(
+                (msg: IChatMessageResponseBody, index, arr) => {
+                  const isUser = msg.sender === "USER"
+                  const isLast = index === arr.length - 1
 
-                return (
-                  <div
-                    key={msg.id}
-                    className={`w-full  flex ${
-                      isUser ? "justify-end" : "justify-start"
-                    }`}
-                  >
-                    <div
-                      className={`flex group flex-col max-w-[85%] md:max-w-[75%] ${
-                        isUser ? "items-end" : "items-start"
-                      }`}
-                    >
-                      {/* Message Bubble */}
-
+                  return (
+                    <div key={msg.id}>
                       <div
-                        className={`px-4 py-3 rounded-xl text-sm shadow ${
-                          isUser
-                            ? "bg-blue-500 text-white rounded-br-none"
-                            : "bg-gray-100 text-gray-800 rounded-bl-none"
-                        }`}
-                      >
-                        {msg.message}
-                      </div>
-
-                      {/* Icon Row */}
-                      <div
-                        className={`flex gap-4 lg:gap-3 mt-2 pl-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition duration-300 ${
+                        className={`w-full flex ${
                           isUser ? "justify-end" : "justify-start"
                         }`}
                       >
-                        {!isUser && (
-                          <>
-                            <Tooltip
-                              title="like"
-                              onClick={() =>
-                                likeMessage({ id: msg.id, is_liked: true })
-                              }
-                            >
-                              <ThumbsUp className="w-4 h-4 cursor-pointer text-gray-400 hover:text-gray-600" />
-                            </Tooltip>
-                            <Tooltip title="dislike">
-                              <ThumbsDown className="w-4 h-4 cursor-pointer text-gray-400 hover:text-gray-600" />
-                            </Tooltip>
+                        <div
+                          className={`flex group flex-col max-w-[85%] md:max-w-[75%] ${
+                            isUser ? "items-end" : "items-start"
+                          }`}
+                        >
+                          {/* Message Bubble */}
+                          <div
+                            className={`px-4 py-3 rounded-xl text-sm shadow ${
+                              isUser
+                                ? "bg-blue-500 text-white rounded-br-none"
+                                : "bg-gray-100 text-gray-800 rounded-bl-none"
+                            }`}
+                          >
+                            {msg.message}
+                          </div>
 
-                            <Tooltip
-                              title="Copy"
-                              onClick={() => {
-                                navigator.clipboard.writeText(msg.message || "")
-                              }}
-                            >
-                              <Copy className="w-4 h-4 cursor-pointer text-gray-400 hover:text-gray-600" />
-                            </Tooltip>
-                          </>
-                        )}
+                          {/* Icon Row */}
+                          <div
+                            className={`flex gap-4 lg:gap-3 mt-2 pl-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition duration-300 ${
+                              isUser ? "justify-end" : "justify-start"
+                            }`}
+                          >
+                            {!isUser && (
+                              <>
+                                <Tooltip
+                                  title="like"
+                                  onClick={() =>
+                                    likeMessage({ id: msg.id, is_liked: true })
+                                  }
+                                >
+                                  <ThumbsUp className="w-4 h-4 cursor-pointer text-gray-400 hover:text-gray-600" />
+                                </Tooltip>
+                                <Tooltip title="dislike">
+                                  <ThumbsDown className="w-4 h-4 cursor-pointer text-gray-400 hover:text-gray-600" />
+                                </Tooltip>
+
+                                <Tooltip
+                                  title="Copy"
+                                  onClick={() => {
+                                    navigator.clipboard.writeText(
+                                      msg.message || ""
+                                    )
+                                  }}
+                                >
+                                  <Copy className="w-4 h-4 cursor-pointer text-gray-400 hover:text-gray-600" />
+                                </Tooltip>
+                              </>
+                            )}
+                          </div>
+                        </div>
                       </div>
+
+                      {/* Loader after the last user message */}
+                      {isLast && isUser && isSendingMessage && (
+                        <div className="flex justify-start items-center mt-2">
+                          <div className="bg-gray-100 p-2 rounded-full shadow">
+                            <img
+                              src="/assets/educhat-logo.svg"
+                              alt="educhat logo"
+                              className="w-7 h-7"
+                            />
+                          </div>
+                          <div className="max-w-3xl  space-y-4">
+                            <MessageLoader />
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  </div>
-                )
-              })}
+                  )
+                }
+              )}
 
               <span id="chat-scroll-anchor" />
             </div>
