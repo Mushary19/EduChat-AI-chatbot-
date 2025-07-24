@@ -16,9 +16,16 @@ export interface IChatMessageBody {
 export interface IChatMessageResponse {
   response?: string
   session_id: string
+  title: string
+  prompt: string
 }
 
 export interface IChatMessageUpdateBody {
   id: number
   is_liked: boolean
+}
+
+export interface IGenerateTitleBody {
+  session_id: string
+  prompt: string
 }

@@ -7,7 +7,7 @@ import {
   type SetStateAction,
 } from "react"
 import toast from "react-hot-toast"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition"
@@ -28,12 +28,16 @@ interface Props {
 
 const InputBar: React.FC<Props> = (props) => {
   const {
-    sessionId,
+    // sessionId,
     setOptimisticMessages,
     setIsSendingMessage,
     isSendingMessage,
   } = props
   const navigate = useNavigate()
+
+  const [searchParams] = useSearchParams()
+
+  const sessionId = searchParams.get("session_id")
 
   const [message, setMessage] = useState("")
   const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -60,9 +64,6 @@ const InputBar: React.FC<Props> = (props) => {
     browserSupportsSpeechRecognition,
     isMicrophoneAvailable,
   } = useSpeechRecognition()
-
-  console.log(transcript)
-  console.log(listening)
 
   const { mutate: sendChatMessage } = useSendChatMessage()
 

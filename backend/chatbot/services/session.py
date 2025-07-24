@@ -12,45 +12,48 @@ CHATBOT_API_KEY = os.environ.get("CHATBOT_API_KEY")
 
 
 def generate_title(prompt, session):
-
     if not session:
-        return
+        return {"status": "error", "error": "Session not found."}
 
-    if session.title == "New Chat":
-        url = "https://openrouter.ai/api/v1/chat/completions"
-        headers = {
-            "Authorization": f"Bearer {CHATBOT_API_KEY}",
-            "Content-Type": "application/json",
-        }
-        data = {
-            "model": "deepseek/deepseek-r1-0528:free",
-            "messages": [
-                {
-                    "role": "system",
-                    "content": (
-                        "Generate a perfect title for the prompt you have given, the title should be less than 5 words."
-                    ),
-                },
-                {"role": "user", "content": prompt},
-            ],
-        }
+    url = "https://openrouter.ai/api/v1/chat/completions"
+    headers = {
+        "Authorization": f"Bearer {CHATBOT_API_KEY}",
+        "Content-Type": "application/json",
+    }
+    data = {
+        "model": "deepseek/deepseek-r1-0528:free",
+        "messages": [
+            {
+                "role": "system",
+                "content": (
+                    "You are an assistant helping to name conversations. "
+                    "Generate a short and relevant title (max 5 words) for the user’s input. "
+                    "Avoid punctuation and use proper capitalization."
+                ),
+            },
+            {"role": "user", "content": prompt},
+        ],
+    }
 
+    try:
         response = requests.post(url, json=data, headers=headers)
-
-        try:
-            result = response.json()
-        except ValueError:
+        if response.status_code != 200:
             return {
                 "status": "error",
-                "error": "Sorry, the model did not return a valid response.",
+                "error": "Failed to generate title from external API.",
             }
 
-        title = result["choices"][0]["message"]["content"] or "New Chat."
-
+        result = response.json()
+        title = (
+            result.get("choices", [{}])[0].get("message", {}).get("content", "Untitled")
+        )
         session.title = title
         session.save()
 
-        return
+        return {"status": "success", "title": title}
+
+    except Exception as e:
+        return {"status": "error", "error": str(e)}
 
 
 def chat_with_bot(prompt, session, request):

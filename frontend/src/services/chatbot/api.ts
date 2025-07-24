@@ -3,6 +3,7 @@ import type {
   IChatMessageResponse,
   IChatMessageResponseBody,
   IChatMessageUpdateBody,
+  IGenerateTitleBody,
 } from "../../lib/types/chatbot/chatMessage"
 import type {
   IChatSession,
@@ -51,4 +52,8 @@ export const updateChatSession = (
 
 export const deleteChatSession = (url: string) => {
   return fetchDelete<string>(url)
+}
+
+export const generateSessionTitle = (url: string, body: IGenerateTitleBody) => {
+  return fetchPost<{}, IGenerateTitleBody>(url, body)
 }
