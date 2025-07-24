@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
-from chatbot.services.session import chat_with_bot
+from chatbot.services.session import chat_with_bot, generate_title
 from chatbot.models.session import ChatSession
 from chatbot.serializers.log import ChatLogSerializer
 from chatbot.models.log import ChatLog
@@ -30,6 +30,7 @@ class ChatLogViewSet(ModelViewSet):
 
         if prompt:
             try:
+                # generate_title(prompt, session)
                 chat_response = chat_with_bot(prompt, session, request)
             except Exception as e:
                 return Response({"error": str(e)})

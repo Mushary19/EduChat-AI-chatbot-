@@ -80,6 +80,9 @@ export const useSendChatMessage = () => {
       queryClient.invalidateQueries({
         queryKey: [ChatbotKey.CHATMESSAGE, data.session_id],
       })
+      queryClient.invalidateQueries({
+        queryKey: [ChatbotKey.CHATSESSION, data.session_id],
+      })
     },
     onError: (error: any) => {
       toast.error(error.data.error || "Something went wrong!")

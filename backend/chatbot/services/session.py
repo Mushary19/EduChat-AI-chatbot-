@@ -1,5 +1,6 @@
 import requests
 
+from chatbot.models.session import ChatSession
 from user.models import User
 from chatbot.models.log import ChatLog, ChatSender
 
@@ -8,6 +9,48 @@ import os
 
 load_dotenv(dotenv_path=".env.local")
 CHATBOT_API_KEY = os.environ.get("CHATBOT_API_KEY")
+
+
+def generate_title(prompt, session):
+
+    if not session:
+        return
+
+    if session.title == "New Chat":
+        url = "https://openrouter.ai/api/v1/chat/completions"
+        headers = {
+            "Authorization": f"Bearer {CHATBOT_API_KEY}",
+            "Content-Type": "application/json",
+        }
+        data = {
+            "model": "deepseek/deepseek-r1-0528:free",
+            "messages": [
+                {
+                    "role": "system",
+                    "content": (
+                        "Generate a perfect title for the prompt you have given, the title should be less than 5 words."
+                    ),
+                },
+                {"role": "user", "content": prompt},
+            ],
+        }
+
+        response = requests.post(url, json=data, headers=headers)
+
+        try:
+            result = response.json()
+        except ValueError:
+            return {
+                "status": "error",
+                "error": "Sorry, the model did not return a valid response.",
+            }
+
+        title = result["choices"][0]["message"]["content"] or "New Chat."
+
+        session.title = title
+        session.save()
+
+        return
 
 
 def chat_with_bot(prompt, session, request):

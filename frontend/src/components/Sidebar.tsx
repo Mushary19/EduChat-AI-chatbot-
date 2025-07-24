@@ -84,14 +84,14 @@ const ChatSessionItem = ({
         }`}
       >
         <input
-          value={!isEditing ? `${updatedTitle.substring(0, 25)}` : updatedTitle}
+          value={updatedTitle}
           ref={titleRef}
           readOnly={!isEditing}
           onClick={(e) => {
             if (!isEditing) return
             e.stopPropagation()
           }}
-          className={`bg-transparent outline-none border-none w-full cursor-pointer text-gray-700 ${
+          className={`bg-transparent outline-none border-none w-full cursor-pointer text-gray-700 line-clamp-1 ${
             isEditing ? "bg-white px-1 py-0.5 rounded" : ""
           }`}
           onChange={(e) => setUpdatedTitle(e.target.value)}
