@@ -45,7 +45,7 @@ class ChatLogViewSet(ModelViewSet):
     def generate_title(self, request, pk=None):
         session = get_object_or_404(ChatSession, session_id=pk)
         prompt = request.data.get("prompt")
-
+        user_id = request.data.get("user_id")
         if not prompt:
             return Response({"error": "Prompt is required."}, status=400)
 
@@ -57,4 +57,4 @@ class ChatLogViewSet(ModelViewSet):
         if result.get("status") == "error":
             return Response({"error": result["error"]}, status=500)
 
-        return Response({"message": "Title updated"}, status=200)
+        return Response({"message": "Title updated", "user_id": user_id}, status=200)

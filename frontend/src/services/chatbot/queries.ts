@@ -4,7 +4,7 @@ import { ChatbotKey } from "./keys"
 
 export const useLoadChatSessions = (userId: number) => {
   return useQuery({
-    queryKey: [ChatbotKey.CHATSESSION],
+    queryKey: [ChatbotKey.CHATSESSION, userId],
     queryFn: () => loadChatSessions(`/chatbot/session/`, userId),
   })
 }

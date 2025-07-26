@@ -82,7 +82,7 @@ export const useGenerateSessionTitle = () => {
     },
     onSuccess: (data: any) => {
       queryClient.invalidateQueries({
-        queryKey: [ChatbotKey.CHATSESSION],
+        queryKey: [ChatbotKey.CHATSESSION, data.user_id],
       })
     },
     onError: () => {
@@ -116,7 +116,11 @@ export const useSendChatMessage = () => {
       })
 
       if (data.title === "New Chat" && !isGeneratingTitle) {
-        generateTitle({ session_id: data.session_id, prompt: variables.prompt })
+        generateTitle({
+          session_id: data.session_id,
+          prompt: variables.prompt,
+          user_id: variables.userId,
+        })
       }
     },
     onError: (error: any) => {

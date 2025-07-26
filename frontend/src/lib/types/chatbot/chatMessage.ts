@@ -28,4 +28,5 @@ export interface IChatMessageUpdateBody {
 export interface IGenerateTitleBody {
   session_id: string
   prompt: string
+  user_id: number
 }
