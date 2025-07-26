@@ -1,6 +1,5 @@
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined"
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline"
-import { CircularProgress } from "@mui/material"
 import Popover from "@mui/material/Popover"
 import { LogOut, MoreHorizontal } from "lucide-react"
 import * as React from "react"
@@ -8,7 +7,6 @@ import { useNavigate, useSearchParams } from "react-router-dom"
 import { useAuth } from "../lib/hooks/useAuth"
 import type { IChatSession } from "../lib/types/chatbot/chatSession"
 import {
-  useCreateChatSession,
   useDeleteChatSession,
   useUpdateSessionTitle,
 } from "../services/chatbot/mutations"
@@ -216,8 +214,8 @@ const Sidebar = () => {
   const sessionId = searchParams.get("session_id")
 
   const { data: chatSessions, isPending } = useLoadChatSessions(user?.id ?? 0)
-  const { mutateAsync: createSession, isPending: isCreatePending } =
-    useCreateChatSession()
+  // const { mutateAsync: createSession, isPending: isCreatePending } =
+  //   useCreateChatSession()
   const { mutate: deleteSession, isSuccess: isDeleted } = useDeleteChatSession()
 
   React.useEffect(() => {
@@ -232,10 +230,11 @@ const Sidebar = () => {
 
   const handleCreateChatSession = async () => {
     if (!sessionId) return
-    const response = await createSession({ user: user?.id ?? 0 })
-    if (response.session_id) {
-      navigate(`/?session_id=${response.session_id}`)
-    }
+    navigate(`/`)
+    // const response = await createSession({ user: user?.id ?? 0 })
+    // if (response.session_id) {
+    //   navigate(`/?session_id=${response.session_id}`)
+    // }
   }
 
   const handleLogout = () => {
@@ -270,7 +269,7 @@ const Sidebar = () => {
               alt="New chat icon"
               className="w-5 h-5"
             />
-            {isCreatePending ? <CircularProgress size={20} /> : "New Chat"}
+            New Chat
           </button>
         </div>
 
@@ -285,7 +284,7 @@ const Sidebar = () => {
               alt="New chat icon"
               className="w-5 h-5"
             />
-            {isCreatePending ? <CircularProgress size={20} /> : "New Chat"}
+            New Chat
           </button>
         </div>
 
