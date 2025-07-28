@@ -9,17 +9,20 @@ import InitialChatView from "./InitialChatView"
 const Chatbot = () => {
   const [searchParams] = useSearchParams()
   const sessionId = searchParams.get("session_id")
-
   const { data: chatMessages } = useLoadChatMessagesBySessionId(sessionId ?? "")
-
   const [optimisticMessages, setOptimisticMessages] = useState<
     IChatMessageResponseBody[]
   >([])
   const [isSendingMessage, setIsSendingMessage] = useState(false)
 
   useEffect(() => {
-    setOptimisticMessages([])
-  }, [sessionId])
+    if (sessionId && chatMessages && chatMessages.length > 0) {
+      setOptimisticMessages([])
+    }
+  }, [sessionId, chatMessages])
+
+  const hasMessages =
+    (chatMessages && chatMessages.length > 0) || optimisticMessages.length > 0
 
   return (
     <div className="flex flex-col h-full">
@@ -31,7 +34,7 @@ const Chatbot = () => {
             isSendingMessage={isSendingMessage}
           />
         </div>
-      ) : sessionId && chatMessages?.length === 0 ? (
+      ) : sessionId && !hasMessages ? (
         <>
           <ChatView
             optimisticMessages={optimisticMessages}

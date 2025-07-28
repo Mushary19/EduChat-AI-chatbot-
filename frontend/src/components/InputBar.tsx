@@ -71,14 +71,13 @@ const InputBar: React.FC<Props> = (props) => {
 
   const handleSendChatMessage = async (message: string) => {
     setIsSendingMessage(true)
+    const newMsg = {
+      id: Date.now(),
+      message: message,
+      sender: "USER" as "USER",
+      created_at: new Date().toISOString(),
+    }
     const send = (sessionId: string) => {
-      const newMsg = {
-        id: Date.now(),
-        message: message,
-        sender: "USER" as "USER",
-        created_at: new Date().toISOString(),
-      }
-
       setOptimisticMessages((prev) => [...prev, newMsg])
 
       sendChatMessage(
@@ -93,7 +92,9 @@ const InputBar: React.FC<Props> = (props) => {
       )
     }
 
-    if (!sessionId) {
+    if (sessionId) {
+      send(sessionId)
+    } else {
       try {
         const response = await createSession({ user: user?.id ?? 0 })
         const newSessionId = response.session_id
@@ -103,8 +104,6 @@ const InputBar: React.FC<Props> = (props) => {
       } catch (error: any) {
         console.log(error)
       }
-    } else {
-      send(sessionId)
     }
   }
 

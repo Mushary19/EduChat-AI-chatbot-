@@ -26,18 +26,23 @@ class ChatLogViewSet(ModelViewSet):
         session = get_object_or_404(ChatSession, session_id=pk)
         prompt = request.data.get("prompt")
 
-        chat_response = ""
+        response = None
 
         if prompt:
             try:
-                chat_response = chat_with_bot(prompt, session, request)
+                response = chat_with_bot(prompt, session, request)
             except Exception as e:
                 return Response({"error": str(e)})
+
+        if response and response["status"] == "error":
+            return Response(
+                {"error": "Server is busy now, Please try again later."}, status=400
+            )
+
         return Response(
             {
-                "response": chat_response,
+                "response": response["message"],
                 "session_id": pk,
-                "title": session.title,
             }
         )
 

@@ -4,7 +4,6 @@ import type {
   IChatMessageResponse,
   IChatMessageResponseBody,
   IChatMessageUpdateBody,
-  IGenerateTitleBody,
 } from "../../lib/types/chatbot/chatMessage"
 import type {
   IChatSessionBody,
@@ -13,7 +12,6 @@ import type {
 import {
   createChatSession,
   deleteChatSession,
-  generateSessionTitle,
   likeChatMessage,
   sendChatMessage,
   updateChatSession,
@@ -65,40 +63,8 @@ export const useUpdateSessionTitle = () => {
   })
 }
 
-const generatingMap = new Map<string, boolean>()
-
-export const useGenerateSessionTitle = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: (body: IGenerateTitleBody) =>
-      generateSessionTitle(`/chatbot/${body.session_id}/generate-title/`, body),
-    onMutate: (body) => {
-      generatingMap.set(body.session_id, true)
-
-      setTimeout(() => {
-        generatingMap.delete(body.session_id)
-      }, 60000)
-    },
-    onSuccess: (data: any) => {
-      queryClient.invalidateQueries({
-        queryKey: [ChatbotKey.CHATSESSION, data.user_id],
-      })
-    },
-    onError: () => {
-      return
-    },
-    onSettled: (_data, _error, variables) => {
-      generatingMap.delete(variables.session_id)
-    },
-  })
-}
-
 // Chat Message
 export const useSendChatMessage = () => {
-  const { mutate: generateTitle, isPending: isGeneratingTitle } =
-    useGenerateSessionTitle()
-
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: ({
@@ -114,14 +80,9 @@ export const useSendChatMessage = () => {
       queryClient.invalidateQueries({
         queryKey: [ChatbotKey.CHATMESSAGE, data.session_id],
       })
-
-      if (data.title === "New Chat" && !isGeneratingTitle) {
-        generateTitle({
-          session_id: data.session_id,
-          prompt: variables.prompt,
-          user_id: variables.userId,
-        })
-      }
+      queryClient.invalidateQueries({
+        queryKey: [ChatbotKey.CHATSESSION, variables.userId],
+      })
     },
     onError: (error: any) => {
       toast.error(error.data.error || "Something went wrong!")

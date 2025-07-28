@@ -47,8 +47,6 @@ def generate_title(prompt, session):
         title = (
             result.get("choices", [{}])[0].get("message", {}).get("content", "Untitled")
         )
-        session.title = title
-        session.save()
 
         return {"status": "success", "title": title}
 
@@ -160,8 +158,9 @@ def chat_with_bot(prompt, session, request):
             {"role": "user", "content": prompt},
         ],
     }
+    # import pdb
 
-    ChatLog.objects.create(session=session, sender=ChatSender.USER, message=prompt)
+    # pdb.set_trace()
 
     response = requests.post(url, json=data, headers=headers)
 
@@ -173,10 +172,14 @@ def chat_with_bot(prompt, session, request):
             "error": "Sorry, the model did not return a valid response.",
         }
 
+    if result.get("error"):
+        return {"status": "error", "message": "Something went wrong"}
+
+    ChatLog.objects.create(session=session, sender=ChatSender.USER, message=prompt)
     reply = (
         result["choices"][0]["message"]["content"] or "Sorry, i didn't understand that."
     )
 
     ChatLog.objects.create(session=session, sender=ChatSender.SYSTEM, message=reply)
 
-    return reply
+    return {"status": "success", "message": reply}
