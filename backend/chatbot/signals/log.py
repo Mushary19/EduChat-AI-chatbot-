@@ -6,7 +6,6 @@ from django_q.tasks import async_task
 
 @receiver(post_save, sender=ChatLog)
 def generate_session_title(sender, instance, created, **kwargs):
-    print("im running")
     session = instance.session
     if created and session.title == "New Chat" and instance.sender == ChatSender.USER:
         async_task(
