@@ -46,20 +46,20 @@ class ChatLogViewSet(ModelViewSet):
             }
         )
 
-    @action(["POST"], url_path="generate-title", detail=True)
-    def generate_title(self, request, pk=None):
-        session = get_object_or_404(ChatSession, session_id=pk)
-        prompt = request.data.get("prompt")
-        user_id = request.data.get("user_id")
-        if not prompt:
-            return Response({"error": "Prompt is required."}, status=400)
+    # @action(["POST"], url_path="generate-title", detail=True)
+    # def generate_title(self, request, pk=None):
+    #     session = get_object_or_404(ChatSession, session_id=pk)
+    #     prompt = request.data.get("prompt")
+    #     user_id = request.data.get("user_id")
+    #     if not prompt:
+    #         return Response({"error": "Prompt is required."}, status=400)
 
-        if session.title != "New Chat":
-            return Response({"message": "Title is already set."}, status=200)
+    #     if session.title != "New Chat":
+    #         return Response({"message": "Title is already set."}, status=200)
 
-        result = generate_title(prompt, session)
+    #     result = generate_title(prompt, session)
 
-        if result.get("status") == "error":
-            return Response({"error": result["error"]}, status=500)
+    #     if result.get("status") == "error":
+    #         return Response({"error": result["error"]}, status=500)
 
-        return Response({"message": "Title updated", "user_id": user_id}, status=200)
+    #     return Response({"message": "Title updated", "user_id": user_id}, status=200)

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     # 3rd party
     "corsheaders",
     "rest_framework",
+    "django_q",
     # internal
     "core",
     "chatbot",
@@ -74,6 +75,17 @@ CORS_ALLOWED_ORIGINS = [
 # CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOW_CREDENTIALS = True
+
+# settings for Django Q
+Q_CLUSTER = {
+    "name": "DjangoQ",
+    "workers": 3,  # number of worker processes
+    "timeout": 90,  # max time for each task
+    "retry": 120,  # retry failed tasks after X seconds
+    "queue_limit": 50,  # max tasks in queue
+    "bulk": 10,  # how many tasks to process at once
+    "orm": "default",  # use Django ORM for the broker
+}
 
 
 ROOT_URLCONF = "app.urls"

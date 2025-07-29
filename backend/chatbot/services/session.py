@@ -11,9 +11,7 @@ load_dotenv(dotenv_path=".env.local")
 CHATBOT_API_KEY = os.environ.get("CHATBOT_API_KEY")
 
 
-def generate_title(prompt, session):
-    if not session:
-        return {"status": "error", "error": "Session not found."}
+def generate_title(prompt):
 
     url = "https://openrouter.ai/api/v1/chat/completions"
     headers = {

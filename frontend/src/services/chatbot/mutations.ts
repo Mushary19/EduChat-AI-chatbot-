@@ -80,9 +80,13 @@ export const useSendChatMessage = () => {
       queryClient.invalidateQueries({
         queryKey: [ChatbotKey.CHATMESSAGE, data.session_id],
       })
-      queryClient.invalidateQueries({
-        queryKey: [ChatbotKey.CHATSESSION, variables.userId],
-      })
+      const timeout = setTimeout(() => {
+        queryClient.invalidateQueries({
+          queryKey: [ChatbotKey.CHATSESSION, variables.userId],
+        })
+      }, 20000)
+
+      return () => clearTimeout(timeout)
     },
     onError: (error: any) => {
       toast.error(error.data.error || "Something went wrong!")
