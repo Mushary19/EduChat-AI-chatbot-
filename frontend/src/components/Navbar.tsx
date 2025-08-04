@@ -15,7 +15,7 @@ import { MessageCirclePlus } from "lucide-react"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
 import { useDispatch } from "react-redux"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import { logoutSuccess } from "../features/user/userSlice"
 import { useAuth } from "../lib/hooks/useAuth"
 import { useCreateChatSession } from "../services/chatbot/mutations"
@@ -28,7 +28,7 @@ const Navbar = () => {
   const [openSidebarDrawer, setOpenSidebarDrawer] = useState(false)
 
   const toggleOpenSidebarDrawer = () => setOpenSidebarDrawer((prev) => !prev)
-
+  const [searchParams] = useSearchParams()
   const theme = useTheme()
   const isBelowMd = useMediaQuery(theme.breakpoints.down("md"))
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
@@ -41,7 +41,7 @@ const Navbar = () => {
 
   const { user } = useAuth()
 
-  console.log(user)
+  const sessionId = searchParams.get("session_id")
 
   const toggleOpenLogout = () => setOpenLogout((prev) => !prev)
   const toggleOpenProfile = () => setOpenProfile((prev) => !prev)
@@ -49,6 +49,7 @@ const Navbar = () => {
   const { mutateAsync: createNewSession } = useCreateChatSession()
 
   const handleCreateNewSession = async () => {
+    if (!sessionId) return
     const response = await createNewSession({ user: user?.id ?? 0 })
     if (response.session_id) navigate(`/?session_id=${response.session_id}`)
   }
