@@ -1,12 +1,11 @@
-import PersonAddIcon from "@mui/icons-material/PersonAdd"
 import {
-  Avatar,
   Box,
   Button,
   Card,
   CardContent,
   TextField,
   Typography,
+  useMediaQuery,
   useTheme,
 } from "@mui/material"
 import { useEffect } from "react"
@@ -18,6 +17,7 @@ import { useRegister } from "../../services/auth/mutations"
 const Register = () => {
   const theme = useTheme()
   const navigate = useNavigate()
+  const isBelowMd = useMediaQuery(theme.breakpoints.down("md"))
   const { mutate: register, isPending, isSuccess } = useRegister()
 
   const {
@@ -129,7 +129,13 @@ const Register = () => {
 
         <CardContent sx={{ p: 4, pt: 0 }}>
           <form onSubmit={handleSubmit(onSubmit)} noValidate>
-            <Box sx={{ display: "flex", gap: 2 }}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: isBelowMd ? "column" : "row",
+                gap: isBelowMd ? 0 : 2,
+              }}
+            >
               <Controller
                 name="first_name"
                 control={control}
@@ -204,12 +210,12 @@ const Register = () => {
             <Controller
               name="email"
               control={control}
-              rules={{ 
+              rules={{
                 required: "Email is required",
                 pattern: {
                   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: "Invalid email address"
-                }
+                  message: "Invalid email address",
+                },
               }}
               render={({ field }) => (
                 <TextField
@@ -245,12 +251,12 @@ const Register = () => {
             <Controller
               name="password"
               control={control}
-              rules={{ 
+              rules={{
                 required: "Password is required",
                 minLength: {
                   value: 6,
-                  message: "Password must be at least 6 characters"
-                }
+                  message: "Password must be at least 6 characters",
+                },
               }}
               render={({ field }) => (
                 <TextField
@@ -386,4 +392,4 @@ const Register = () => {
   )
 }
 
-export default Register 
+export default Register

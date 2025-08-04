@@ -213,7 +213,7 @@ const Sidebar = () => {
 
   const sessionId = searchParams.get("session_id")
 
-  const { data: chatSessions, isPending } = useLoadChatSessions(user?.id ?? 0)
+  const { data: chatSessions } = useLoadChatSessions(user?.id ?? 0)
   // const { mutateAsync: createSession, isPending: isCreatePending } =
   //   useCreateChatSession()
   const { mutate: deleteSession, isSuccess: isDeleted } = useDeleteChatSession()

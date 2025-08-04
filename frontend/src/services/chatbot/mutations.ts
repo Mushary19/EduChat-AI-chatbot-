@@ -102,7 +102,7 @@ export const useLikeChatMessage = () => {
       likeChatMessage(`/chatbot/${body.id}/`, body),
     onSuccess: (data: IChatMessageResponseBody) => {
       queryClient.invalidateQueries({
-        queryKey: [ChatbotKey.CHATMESSAGE, data.id],
+        queryKey: [ChatbotKey.CHATMESSAGE, data.session],
       })
     },
     onError: (error: any) => {
