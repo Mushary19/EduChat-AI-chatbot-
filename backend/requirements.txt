@@ -10,6 +10,7 @@ django-cors-headers==4.7.0
 django-picklefield==3.3
 django-q2==1.8.0
 djangorestframework==3.16.0
+djangorestframework-simplejwt
 gunicorn==23.0.0
 h11==0.16.0
 idna==3.10

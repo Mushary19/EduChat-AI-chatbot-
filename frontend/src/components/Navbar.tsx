@@ -11,9 +11,9 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material"
+import Cookies from "js-cookie"
 import { MessageCirclePlus } from "lucide-react"
-import { useEffect, useState } from "react"
-import toast from "react-hot-toast"
+import { useState } from "react"
 import { useDispatch } from "react-redux"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { logoutSuccess } from "../features/user/userSlice"
@@ -63,18 +63,18 @@ const Navbar = () => {
   }
 
   const handleLogout = () => {
-    handleMenuClose()
+    localStorage.removeItem("hasVisited")
     dispatch(logoutSuccess())
-    localStorage.removeItem("chatbot_user")
-    navigate("/auth/login/")
+    Cookies.remove("eduChatAccess")
+    navigate("/auth/login")
   }
 
-  useEffect(() => {
-    if (!user) {
-      toast.error("Authentication required")
-      navigate("/auth/login/")
-    }
-  }, [user, navigate])
+  // useEffect(() => {
+  //   if (!user) {
+  //     toast.error("Authentication required")
+  //     navigate("/auth/login/")
+  //   }
+  // }, [user, navigate])
 
   return (
     <>

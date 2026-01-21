@@ -1,8 +1,14 @@
 import { useMutation } from "@tanstack/react-query"
+import Cookies from "js-cookie"
+import { jwtDecode } from "jwt-decode"
 import { toast } from "react-hot-toast"
 import { useDispatch } from "react-redux"
 import { loginSuccess } from "../../features/user/userSlice"
-import type { ILoginBody, ILoginResponse } from "../../lib/types/auth/login"
+import type {
+  IAuthResponse,
+  IJwtDecode,
+  ILoginBody,
+} from "../../lib/types/auth/login"
 import type { IRegisterBody } from "../../lib/types/auth/register"
 import { login, register } from "./api"
 
@@ -10,11 +16,14 @@ export const useLogin = () => {
   const dispatch = useDispatch()
 
   return useMutation({
-    mutationFn: (body: ILoginBody) => login("/auth/login/", body),
-    onSuccess: (data: ILoginResponse) => {
-      toast.success(`Welcome ${data.user.first_name} ${data.user.last_name}!`)
-      dispatch(loginSuccess(data.user))
-      localStorage.setItem("chatbot_user", JSON.stringify(data.user.first_name))
+    mutationFn: (body: ILoginBody) => login("/token/", body),
+    onSuccess: (data: IAuthResponse) => {
+      const decoded = jwtDecode<IJwtDecode>(data.access)
+      dispatch(loginSuccess(decoded.user))
+      Cookies.set("eduChatAccess", data.access)
+      toast.success(
+        `Welcome ${decoded.user.first_name} ${decoded.user.last_name}!`
+      )
     },
     onError: (error: any) => {
       toast.error(error?.data.error || "Something went wrong.")

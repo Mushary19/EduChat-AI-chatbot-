@@ -4,9 +4,11 @@ import { Outlet } from "react-router-dom"
 import type { RootState } from "../app/store"
 import Navbar from "../components/Navbar"
 import Sidebar from "../components/Sidebar"
+import { useAuthCheck } from "../lib/hooks/useAuthCheck"
 import Login from "../pages/auth/Login"
 
 const MainLayout = () => {
+  useAuthCheck()
   const theme = useTheme()
   const belowMd = useMediaQuery(theme.breakpoints.down("md"))
   const belowLg = useMediaQuery(theme.breakpoints.down("lg"))

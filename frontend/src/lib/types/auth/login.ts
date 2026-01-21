@@ -8,3 +8,12 @@ export interface ILoginBody {
 export interface ILoginResponse {
   user: IUser
 }
+
+export interface IAuthResponse {
+  access: string
+  refresh: string
+}
+
+export interface IJwtDecode {
+  user: IUser
+}

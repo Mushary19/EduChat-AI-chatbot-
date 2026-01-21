@@ -7,8 +7,10 @@ import DialogTitle from "@mui/material/DialogTitle"
 import IconButton from "@mui/material/IconButton"
 import { styled } from "@mui/material/styles"
 import { Pause } from "lucide-react"
-import type { Dispatch, SetStateAction } from "react"
-import SpeechRecognition from "react-speech-recognition"
+import { useState, type Dispatch, type SetStateAction } from "react"
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition"
 
 interface Props {
   open: boolean
@@ -38,6 +40,16 @@ export default function MicrophoneModal({
   onClose,
   setIsClosedMicroPhone,
 }: Props) {
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition,
+    isMicrophoneAvailable,
+  } = useSpeechRecognition()
+
+  console.log(transcript)
+  const [message, setmessage] = useState("")
   return (
     <BootstrapDialog
       onClose={onClose}

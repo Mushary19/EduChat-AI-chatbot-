@@ -1,16 +1,10 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { Toaster } from "react-hot-toast"
-import { useDispatch } from "react-redux"
-import { authenticateUser } from "./features/user/userSlice"
 import AppRoutes from "./routes/AppRoutes"
 
 function App() {
-  const dispatch = useDispatch()
-  const user = localStorage.getItem("chatbot_user")
-  if (user) {
-    dispatch(authenticateUser())
-  }
   const queryClient = new QueryClient()
+
   return (
     <>
       <QueryClientProvider client={queryClient}>

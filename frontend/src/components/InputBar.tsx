@@ -65,6 +65,9 @@ const InputBar: React.FC<Props> = (props) => {
     isMicrophoneAvailable,
   } = useSpeechRecognition()
 
+  console.log(transcript)
+  console.log(message)
+
   const { mutate: sendChatMessage } = useSendChatMessage()
 
   const { mutateAsync: createSession } = useCreateChatSession()
